@@ -7,10 +7,13 @@ var watchify = require('watchify');
 var jshint = require('gulp-jshint');
 var less = require('gulp-less');
 var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
 var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 var del = require('del');
 var connect = require('gulp-connect');
 var proxy = require('http-proxy-middleware');
+var rename = require("gulp-rename");
 
 // Define variables
 var sourceDir = 'app/src';
@@ -34,17 +37,22 @@ gulp.task('less', function() {
 
 // Use browserify to convert the module system to be browser-compatible
 // and include referenced npm libraries.
-gulp.task('browserify', function() {
-  return browserify(sourceFile)
-  .bundle()
-  .pipe(source('script.js'))
-  .pipe(gulp.dest(destFolder));
+gulp.task('js', function() {
+  return browserify(sourceFile, {debug: true})
+      .bundle()
+      .pipe(source('script.js'))
+      .pipe(gulp.dest(destFolder))
+      .pipe(buffer())
+      .pipe(uglify())
+      .pipe(rename('script.min.js'))
+      .pipe(gulp.dest(destFolder));
 });
 
 // Watch Files For Changes
 gulp.task('watch', function() {
-    gulp.watch(sourceDir + '/**/*.js', ['lint', 'browserify']);
+    gulp.watch(sourceDir + '/**/*.js', ['lint', 'js']);
     gulp.watch('app/styles/**/*.less', ['less']);
+    gulp.watch('app/**/*.+(html|png|ico|jpg)', ['copy']);
 });
 
 // Clean old build files
@@ -72,7 +80,7 @@ gulp.task('connect', function() {
 // Copy static files into build directory
 gulp.task('copy', function() {
     // Copy all images
-    gulp.src('app/resources/**/*.+(png|ico)', {base: 'app'})
+    gulp.src('app/resources/**/*.+(png|ico|jpg)', {base: 'app'})
         .pipe(gulp.dest('app/build'));
     // Copy main index file
     gulp.src('app/index.html', {base: 'app'})
@@ -84,7 +92,7 @@ gulp.task('copy', function() {
 
 gulp.task('default', [
     'clean',
-    'browserify',
+    'js',
     'less',
     'copy',
     'watch',
