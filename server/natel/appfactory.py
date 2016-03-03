@@ -37,7 +37,7 @@ def create_app(config):
         app.logger.info("Starting in __PRODUCTION__ mode")
 
     # Import and register blueprints
-    from api import api
+    from natel.api import api
     app.register_blueprint(api, url_prefix='/api')
 
     return app

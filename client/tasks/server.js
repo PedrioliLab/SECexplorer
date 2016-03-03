@@ -9,7 +9,6 @@ module.exports = function (gulp, $) {
         return connect.server({
             port: 8010,
             root: 'app/build',
-            livereload: true,
             middleware: function(connect, opt) {
                 return [
                     proxy('/api', {
@@ -20,12 +19,5 @@ module.exports = function (gulp, $) {
             }
         });
     });
-
-    // Start development server that serves static files and proxies
-    // API requests to backend server
-    gulp.task('reload-server', function() {
-        return connect.reload();
-    });
-connect = require('gulp-connect');
 
 };
