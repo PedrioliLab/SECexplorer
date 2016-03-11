@@ -19,10 +19,4 @@ def get_protein_traces_by_id(ids):
             'There are protein in the query that do not exist in the data set. '
             'These proteins are: %s.' % ', '.join(
                 np.array(ids)[~protein_does_exist]))
-    proteins = []
-    for uid, trace in traces.iterrows():
-        proteins.append({
-            'uniprot_id': uid,
-            'trace': trace.tolist()
-        })
-    return proteins
+    return traces

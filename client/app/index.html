@@ -5,7 +5,6 @@
   <title>SEC-SWATH explorer</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
-  <link rel="shortcut icon" href="/resources/img/favicon.ico">
   <!-- ================================================================
        |                             JS                               |
        ================================================================ -->
@@ -13,38 +12,101 @@
   <!-- ================================================================
        |                             CSS                              |
        ================================================================ -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> <link rel="shortcut icon" href="/resources/img/favicon.ico">
       <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="app container-fluid" ng-controller="AppCtrl as app">
+  <div class="app container-fluid"
+    ng-controller="ProteinQueryCtrl as proteinQueryCtrl">
 
-    <h1>SEC-SWATH explorer</h1>
-
-    <div class="left-pane col-xs-3" ng-controller="ProteinQueryCtrl as proteinQueryCtrl">
-      <p>
-        <h3>Select proteins by Uniprot ID</h3>
-        <textarea class="protein-id-input"
-          ng-model="proteinQueryCtrl.inputProteinIDs"></textarea>
-        <button class="btn btn-primary" ng-click="proteinQueryCtrl.queryUsingProteinIDs()">
-          Search
-        </button>
-      </p>
-
-      or
-
-      <h3>Show by annotation/GO</h3>
-      <p>
-        Annotation type<br>
-        <select id="" name=""><option value=""></option></select>
-      </p>
-
-      <p>
-        Value<br>
-        <select id="" name=""><option value=""></option></select>
-      </p>
+    <div class="row topbar">
+      <div class="col-xs-12">
+        <h2>SEC-SWATH explorer</h2>
+      </div>
     </div>
-    <div class="main-pane col-xs-9"></div>
+
+    <div class="row">
+      <div class="left-pane col-xs-3"
+        ng-controller="ListInputCtrl as listInputCtrl">
+        <div class="protein-id-input">
+          <h3>Select proteins by Uniprot ID</h3>
+
+          <div class="form-group">
+            <label>List of UniProt IDs</label>
+            <textarea rows=10 class="form-control" ng-model="listInputCtrl.inputProteinIds"></textarea>
+          </div>
+
+          <div class="btn-container">
+            <button class="btn btn-primary btn-lg" ng-click="listInputCtrl.query()">
+              Submit
+            </button>
+          </div>
+        </div>
+
+        <div class="protein-input-separator">OR</div>
+
+        <div class="protein-annotation-input">
+          <h3>Select proteins by annotation/GO</h3>
+
+          <div class="form-group">
+            <label>Annotation type</label>
+            <select class="form-control">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Value</label>
+            <select class="form-control">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+
+          <div class="btn-container">
+            <button class="btn btn-primary btn-lg" ng-click="proteinQueryCtrl.queryUsingProteinIds()">
+              Submit
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="main-pane col-xs-9">
+
+        <div class="protein-trace-plot-container">
+          <h3>Protein chromatograms</h3>
+          <spinner loading="proteinQueryCtrl.isTraceQueryRunning"></spinner>
+          <div id="protein-trace-plot" ng-hide="proteinQueryCtrl.isTraceQueryRunning"></div>
+        </div>
+
+        <div class="complex-candidates-container">
+          <h3>Complex candidates</h3>
+          <spinner loading="proteinQueryCtrl.isFeatureQueryRunning"></spinner>
+          <table class="table table-hover table-condensed" ng-show="!proteinQueryCtrl.isFeatureQueryRunning">
+            <tr>
+              <th></th>
+              <th># subunits</th>
+              <th>Left SEC</th>
+              <th>Right SEC</th>
+            </tr>
+            <tr ng-repeat="feat in proteinQueryCtrl.complexFeatures">
+              <td>{{ $index }}</td>
+              <td>{{ feat.n_subunits}}</td>
+              <td>{{ feat.left_sec}}</td>
+              <td>{{ feat.right_sec}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
 </body>

@@ -7,5 +7,5 @@ module.exports = ['$scope', '$http', function($scope, $http) {
         }).then(function(resp) {
             $scope.response = resp.data.message;
         });
-    }
+    };
 }];

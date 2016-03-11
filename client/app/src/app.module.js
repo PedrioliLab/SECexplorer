@@ -19,5 +19,7 @@ var app = angular.module('app', [
 ]);
 
 
-app.controller('AppCtrl', require('./AppCtrl'));
+app.controller('ProteinQueryCtrl', require('./ProteinQueryCtrl'));
+
 require('./input');
+require('./util');

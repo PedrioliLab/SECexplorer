@@ -1,1 +1,1 @@
-angular.module('app').controller('ProteinQueryCtrl', require('./ProteinQueryCtrl'));
+angular.module('app').controller('ListInputCtrl', require('./ListInputCtrl'));

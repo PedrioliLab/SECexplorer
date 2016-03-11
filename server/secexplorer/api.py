@@ -1,50 +1,46 @@
 import json
 
 from flask import Blueprint, jsonify, request
-from protein import get_protein_traces_by_id
+
+from data import get_protein_traces_by_id
+from feature import compute_complex_features
 
 
 api = Blueprint('api', __name__)
 
 
-# from rpy2 import robjects
-# @api.route('/reval', methods=['POST'])
-# def reval():
-#     data = json.loads(request.data)
-#     rcode = data.get('rcode', '')
-
-#     response = ''
-#     try:
-#         res = robjects.r(rcode)
-#         response = str(res)
-#     except:
-#         response = 'ERROR'
-
-#     return jsonify({
-#         'message': response
-#     })
 
 @api.route('/complexfeatures', methods=['PUT'])
-def compute_complex_features():
+def get_complex_features():
     data = json.loads(request.data)
     uniprot_ids = data.get('uniprot_ids')
-    import ipdb; ipdb.set_trace()
-    traces = get_protein_traces_by_id(uniprot_ids)
+    features = compute_complex_features(uniprot_ids)
+    return jsonify({
+        'features': features
+    })
 
 
 @api.route('/proteins', methods=['GET'])
 def get_proteins():
     uniprot_ids_str = request.args.get('uniprot_ids')
+
+    if uniprot_ids_str is None:
+        return 'Malformed request', 400
+
     try:
-        if uniprot_ids_str is not None:
-            uniprot_ids = uniprot_ids_str.split(',')
-            proteins = get_protein_traces_by_id(uniprot_ids)
-            print proteins
-        else:
-            return 'Malformed request', 400
+        uniprot_ids = uniprot_ids_str.split(',')
+        protein_traces = get_protein_traces_by_id(uniprot_ids)
+        sec_positions = map(int, protein_traces.columns)
+        proteins = []
+        for uid, trace in protein_traces.iterrows():
+            proteins.append({
+                'uniprot_id': uid,
+                'intensity': trace.tolist(),
+                'sec': sec_positions
+            })
     except ValueError as err:
         return err.message, 404
-    else:
-        return jsonify({
-            'proteins': proteins
-        })
+
+    return jsonify({
+        'proteins': proteins
+    })

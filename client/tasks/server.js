@@ -9,6 +9,7 @@ module.exports = function (gulp, $) {
         return connect.server({
             port: 8010,
             root: 'app/build',
+            livereload: true,
             middleware: function(connect, opt) {
                 return [
                     proxy('/api', {

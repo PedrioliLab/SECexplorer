@@ -13,15 +13,15 @@ module.exports = function (gulp, $) {
       return browserify($.cfg.sourceFile, {debug: true})
           .bundle()
           .pipe(source('script.js'))
-          .pipe(gulp.dest($.cfg.destFolder))
-          .pipe(buffer())
-          .pipe(sourcemaps.init({
-              loadMaps: true
-          }))
-          .pipe(uglify())
-          .pipe(sourcemaps.write('.'))
-          .pipe(rename('script.min.js'))
           .pipe(gulp.dest($.cfg.destFolder));
+          // .pipe(buffer())
+          // .pipe(sourcemaps.init({
+          //     loadMaps: true
+          // }))
+          // .pipe(uglify())
+          // .pipe(sourcemaps.write('.'))
+          // .pipe(rename('script.min.js'))
+          // .pipe(gulp.dest($.cfg.destFolder));
     });
 
 };
