@@ -9,20 +9,20 @@ development server.
 """
 
 from werkzeug.contrib.profiler import ProfilerMiddleware
-from natel.appfactory import create_app
+from secexplorer.appfactory import create_app
 
 
 # NOTE: If additional location-specific configuration is needed at some point
 # cfg = flask.Config(p.realpath(p.dirname(__file__)))
 # Will throw a RuntimeError if not provided
-# cfg.from_envvar('NATEL_SETTINGS')
+# cfg.from_envvar('SECEXPLORER_SETTINGS')
 cfg = {}
 
 app = create_app(cfg)
 
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser(description='NATEL server')
+    parser = argparse.ArgumentParser(description='SECexplorer server')
     parser.add_argument(
         '--port', action='store', type=int, default=8020,
         help='the port on which the server should listen')

@@ -1,9 +1,9 @@
-# NATELexplorer
+# SECexplorer
 
 ## Development setup
 
     $ sudo npm install -g gulp
-    $ cd NATELexplorer/client
+    $ cd secexplorer/client
     $ npm install 
 
 ## Client Developmentw workflow
