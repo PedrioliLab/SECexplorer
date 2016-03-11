@@ -11,7 +11,6 @@ body {
   font-family: Helvetica, 'Trebuchet MS', sans-serif;
   background-image: url("/resources/img/mocha.png");
   background-repeat: repeat;
-  margin: 0;
 }
 
 .app {
@@ -21,11 +20,15 @@ body {
 .left-pane {
   height: 100%;
   background: red;
-  width: 400px;
-  float: left;
+  .protein-id-input {
+    width: 100%;
+    height: 200px;
+  }
+//   width: 400px;
+//   float: left;
 }
 
-.right-pane {
+.main-pane {
   height: 100%;
   background: yellow;
 }
