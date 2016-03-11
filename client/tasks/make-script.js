@@ -1,28 +1,49 @@
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var uglify = require('gulp-uglify');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var rename = require('gulp-rename');
+var sourcemaps = require('gulp-sourcemaps');
+
+
 module.exports = function (gulp, $) {
 
-    var source = require('vinyl-source-stream');
-    var buffer = require('vinyl-buffer');
-    var uglify = require('gulp-uglify');
-    var browserify = require('browserify');
-    var rename = require('gulp-rename');
-    var sourcemaps = require('gulp-sourcemaps');
+    function makeScript(doWatch) {
+        var bundler = browserify({
+            entries: ['./app/src/app.module.js'],
+            debug: true,
+            cache: {},
+            packageCache: {},
+            fullPaths: doWatch
+        });
+        if (doWatch) {
+            bundler = watchify(bundler);
+        }
 
-    // Use browserify to convert the module system to be browser-compatible
-    // and include referenced npm libraries.
+        var rebundle = function() {
+            var stream = bundler.bundle();
+            stream.on('error', function() {
+                console.log('error');
+            });
+            stream = stream.pipe(source('script.js'));
+            return stream.pipe(gulp.dest($.cfg.destFolder));
+        };
+
+        bundler.on('update', rebundle);
+        bundler.on('log', function(l) {
+            console.log(l);
+        });
+
+        return rebundle();
+    }
+
     gulp.task('make-script', function() {
-      return browserify($.cfg.sourceFile, {debug: true})
-          .bundle()
-          .pipe(source('script.js'))
-          .pipe(gulp.dest($.cfg.destFolder));
-          // .pipe(buffer())
-          // .pipe(sourcemaps.init({
-          //     loadMaps: true
-          // }))
-          // .pipe(uglify())
-          // .pipe(sourcemaps.write('.'))
-          // .pipe(rename('script.min.js'))
-          // .pipe(gulp.dest($.cfg.destFolder));
+        return makeScript(false);
     });
 
+    gulp.task('make-script-watch', function() {
+        return makeScript(true);
+    });
 };
 
