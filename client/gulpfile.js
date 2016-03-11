@@ -1,14 +1,6 @@
 // Include gulp itself
 var gulp = require('gulp');
 
-// Include plugins
-// var watchify = require('watchify');
-// var concat = require('gulp-concat');
-// var del = require('del');
-// var connect = require('gulp-connect');
-// var proxy = require('http-proxy-middleware');
-// var rename = require("gulp-rename");
-
 // Define variables
 var config = {
     sourceDir: './app/src',
@@ -24,7 +16,6 @@ taskList.forEach(function(taskFile) {
     var $ = {
         cfg: config
     };
-    console.log('Loading ', taskFile);
     require(taskPath + '/' + taskFile)(gulp, $);
 });
 
