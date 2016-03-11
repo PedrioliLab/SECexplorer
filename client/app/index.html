@@ -17,16 +17,34 @@
 </head>
 <body>
 
-  <div class="app" ng-controller="AppCtrl as app">
+  <div class="app container-fluid" ng-controller="AppCtrl as app">
 
-    <p class="r-input">
-      <span>
-        R: <input type="text" ng-model="message" ng-change="app.sendMessage(message)">
-      </span>
-    </p>
+    <h1>SEC-SWATH explorer</h1>
 
-    <textarea class="r-console">{{ response }}</textarea>
+    <div class="left-pane col-xs-3" ng-controller="ProteinQueryCtrl as proteinQueryCtrl">
+      <p>
+        <h3>Select proteins by Uniprot ID</h3>
+        <textarea class="protein-id-input"
+          ng-model="proteinQueryCtrl.inputProteinIDs"></textarea>
+        <button class="btn btn-primary" ng-click="proteinQueryCtrl.queryUsingProteinIDs()">
+          Search
+        </button>
+      </p>
 
+      or
+
+      <h3>Show by annotation/GO</h3>
+      <p>
+        Annotation type<br>
+        <select id="" name=""><option value=""></option></select>
+      </p>
+
+      <p>
+        Value<br>
+        <select id="" name=""><option value=""></option></select>
+      </p>
+    </div>
+    <div class="main-pane col-xs-9"></div>
   </div>
 
 </body>

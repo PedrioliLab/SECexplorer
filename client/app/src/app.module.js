@@ -19,5 +19,5 @@ var app = angular.module('app', [
 ]);
 
 
-var AppCtrl = require('./AppCtrl');
-angular.module('app').controller('AppCtrl', AppCtrl);
+app.controller('AppCtrl', require('./AppCtrl'));
+require('./input');

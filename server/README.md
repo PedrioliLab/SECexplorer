@@ -15,6 +15,11 @@ Start development server:
 
     $ python wsgi.py
 
+### Installing libraries
+
+    $ workon secexplorer
+    $ pip install SOMELIB && pip freeze > requirements.txt
+
 Production
 ----------
 

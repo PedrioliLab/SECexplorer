@@ -9,4 +9,3 @@ module.exports = ['$scope', '$http', function($scope, $http) {
         });
     }
 }];
-
