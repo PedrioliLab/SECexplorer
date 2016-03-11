@@ -1,3 +1,7 @@
+// Import libraries
+@import "libs/lesshat";
+@import "libs/bootstrap/custom-bootstrap";
+
 html, body {
   height: 100%;
   width: 100%;
@@ -7,22 +11,21 @@ body {
   font-family: Helvetica, 'Trebuchet MS', sans-serif;
   background-image: url("/resources/img/mocha.png");
   background-repeat: repeat;
+  margin: 0;
 }
 
 .app {
   height: 100%;
 }
 
-.r-console {
-  width: 100%;
+.left-pane {
   height: 100%;
-  font-size: 2em;
-  background: black;
-  color: white;
+  background: red;
+  width: 400px;
+  float: left;
 }
 
-.r-input {
-  input, span {
-    font-size: 1.5em;
-  }
+.right-pane {
+  height: 100%;
+  background: yellow;
 }
