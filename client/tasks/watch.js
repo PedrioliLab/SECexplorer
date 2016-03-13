@@ -5,7 +5,9 @@ module.exports = function (gulp, $) {
 
     // Watch Files For Changes
     gulp.task('watch', function() {
-        gulp.watch($.cfg.sourceDir + '/**/*.js', ['lint', 'make-script-watch']);
+        // gulp.watch($.cfg.sourceDir + '/**/*.js', [
+        //     'lint',
+        // ]);
         gulp.watch('app/styles/**/*.less', ['make-style']);
         gulp.watch('app/**/*.+(html|png|ico|jpg)', ['copy']);
         watch($.cfg.destFolder + '/**/*').pipe(connect.reload());
