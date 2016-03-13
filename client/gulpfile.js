@@ -1,5 +1,6 @@
 // Include gulp itself
 var gulp = require('gulp');
+var runSequence = require('run-sequence');
 
 // Define variables
 var config = {
@@ -19,11 +20,12 @@ taskList.forEach(function(taskFile) {
     require(taskPath + '/' + taskFile)(gulp, $);
 });
 
-gulp.task('default', [
-    'clean',
-    'make-script',
-    'make-style',
-    'copy',
-    'watch',
-    'start-server'
-]);
+gulp.task('default', 
+    runSequence(
+        'clean',
+        ['make-script-watch', 'make-style'],
+        'copy',
+        'watch',
+        'start-server'
+    )
+);
