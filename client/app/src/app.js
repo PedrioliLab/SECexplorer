@@ -18,8 +18,8 @@ var app = angular.module('app', [
     'ui.bootstrap',
 ]);
 
-
-app.controller('ProteinQueryCtrl', require('./ProteinQueryCtrl'));
+require('./ComplexFeature');
+require('./ProteinQueryCtrl');
 
 require('./input');
 require('./util');

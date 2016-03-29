@@ -1,4 +1,4 @@
-module.exports = function spinner() {
+function Spinner() {
     return {
         restrict: 'E',
         scope: {
@@ -6,4 +6,8 @@ module.exports = function spinner() {
         },
         template: '<i class="spinner fa fa-spinner fa-spin" ng-show="loading"></i>'
     };
-};
+}
+
+angular.module('app').directive('spinner', Spinner);
+
+module.exports = Spinner;

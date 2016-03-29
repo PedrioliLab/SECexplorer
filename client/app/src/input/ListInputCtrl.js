@@ -1,4 +1,4 @@
-module.exports = ['$scope', function($scope) {
+var ListInputCtrl = ['$scope', function($scope) {
     var self = this;
 
     // Proteasome 26S (CORUM Id: 181)
@@ -19,3 +19,5 @@ module.exports = ['$scope', function($scope) {
     this.query();
 }];
 
+angular.module('app').controller('ListInputCtrl', ListInputCtrl);
+module.exports = ListInputCtrl;

@@ -11,7 +11,7 @@ module.exports = function (gulp, $) {
 
     function makeScript(doWatch) {
         var bundler = browserify({
-            entries: ['./app/src/app.module.js'],
+            entries: ['./app/src/app.js'],
             debug: true,
             cache: {},
             packageCache: {},

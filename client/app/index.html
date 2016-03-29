@@ -94,14 +94,26 @@
             <tr>
               <th></th>
               <th># subunits</th>
-              <th>Left SEC</th>
-              <th>Right SEC</th>
+              <th>Start SEC</th>
+              <th>End SEC</th>
+              <th>Cluster score</th>
+              <th>Subunits</th>
+              <th>Intensity-based stoichiometry</th>
+              <th>Estimated MW</th>
+              <th>Apparent MW</th>
+              <th>Delta MW</th>
             </tr>
             <tr ng-repeat="feat in proteinQueryCtrl.complexFeatures">
-              <td>{{ $index }}</td>
-              <td>{{ feat.n_subunits}}</td>
-              <td>{{ feat.left_sec}}</td>
-              <td>{{ feat.right_sec}}</td>
+              <td>{{:: $index }}</td>
+              <td>{{:: feat.subunits.length}}</td>
+              <td>{{:: feat.leftSec}}</td>
+              <td>{{:: feat.rightSec}}</td>
+              <td>Intra-group correlation</td>
+              <td>{{:: feat.subunits.join(', ') }}</td>
+              <td>E.g. 1:2:3, same order as subunit col</td>
+              <th>SUM(INtensity-based stoich * MW_subunits) MW</th>
+              <th>convertSECtoMW(right_sec - left_sec)</th>
+              <th>Apparent MW - Estimated MW</th>
             </tr>
           </table>
         </div>

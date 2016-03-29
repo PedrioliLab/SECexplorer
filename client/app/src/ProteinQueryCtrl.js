@@ -2,8 +2,8 @@ var Plotly = require('plotly.js');
 var $ = require('jquery');
 var _ = require('underscore');
 
-
-module.exports = ['$scope', '$http', function($scope, $http) {
+var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature',
+                        function($scope, $http, ComplexFeature) {
     var self = this;
 
 
@@ -39,35 +39,27 @@ module.exports = ['$scope', '$http', function($scope, $http) {
             return resp;
         });
     }
-
-    function getComplexFeatures(proteinIds) {
-        self.isFeatureQueryRunning = true;
-        return $http.put('/api/complexfeatures', {
-            'uniprot_ids': proteinIds
-        })
-        .then(function(resp) {
-            self.isFeatureQueryRunning = false;
-            console.log(resp.data);
-            return resp.data.features;
-        }, function(resp) {
-            self.isFeatureQueryRunning = false;
-            return {};
-        });
-    }
     
     this.queryUsingProteinIds = function(ids) {
         this.isQueryRunning = true;
         getProteinTraces(ids).then(function(proteins) {
-            plotTraces(proteins);
             self.isQueryRunning = false;
+            plotTraces(proteins);
             var proteinIds = _(proteins).pluck('uniprot_id');
-            return getComplexFeatures(proteinIds);
+            self.isFeatureQueryRunning = true;
+            return ComplexFeature.getUsingProteinIds(proteinIds);
         }).then(function(features) {
+            self.isFeatureQueryRunning = false;
             self.complexFeatures = features;
         })
         .catch(function() {
+            self.isFeatureQueryRunning = false;
             self.isQueryRunning = false;
         });
     };
 }];
+
+angular.module('app').controller('ProteinQueryCtrl', ProteinQueryCtrl);
+
+module.exports = ProteinQueryCtrl; 
 
