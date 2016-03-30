@@ -21,7 +21,7 @@ var ProteinChromatogramFactory = function($http) {
      * @returns {Array.<ProteinChromatogram>} A list of protein
      * chromatograms.
      */
-    ProteinChromatogram.getUsingProteinIds = function(proteinIds) {
+    ProteinChromatogram.get = function(proteinIds) {
         var query = '/api/proteins?uniprot_ids=' + proteinIds.join(',');
         return $http.get(query).then(function(resp) {
             return resp.data.proteins.map(function(p) {

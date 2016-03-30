@@ -45,7 +45,7 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
     this.queryUsingProteinIds = function(ids) {
         this.isTraceQueryRunning = true;
         // First get the protein chromatograms.
-        ProteinChromatogram.getUsingProteinIds(ids)
+        ProteinChromatogram.get(ids)
         .then(function(proteins) {
             plotTraces(proteins);
             var proteinIds = _(proteins).pluck('uniprotId');
