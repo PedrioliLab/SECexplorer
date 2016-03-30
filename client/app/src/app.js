@@ -19,6 +19,7 @@ var app = angular.module('app', [
 ]);
 
 require('./ComplexFeature');
+require('./ProteinChromatogram');
 require('./ProteinQueryCtrl');
 
 require('./input');

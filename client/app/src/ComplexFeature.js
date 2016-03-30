@@ -1,9 +1,20 @@
 var ComplexFeatureFactory = function($http) {
-    function ComplexFeature(args) {
-        args = args || {};
-        this.leftSec = args.leftSec;
-        this.rightSec = args.rightSec;
-        this.subunits = args.subunits;
+    /**
+     * Constructor function for comple features.
+     * @param {number} leftSEC - The SEC fraction that forms the left boundary
+     * of this feature.
+     * @param {number} rightSEC - The SEC fraction that forms the right
+     * boundary of this feature.
+     * @param {Array.<string>} subunits - An array of Uniprot Ids of the
+     * subunit of this feature.
+     * @class
+     * @classdesc The representation of a complex/subgroup feature detected
+     * server-side using the sliding window clustering algorithm.
+     */
+    function ComplexFeature(leftSEC, rightSEC, subunits) {
+        this.leftSEC = leftSEC;
+        this.rightSEC = rightSEC;
+        this.subunits = subunits;
     }
 
     /**
@@ -18,11 +29,11 @@ var ComplexFeatureFactory = function($http) {
         .then(function(resp) {
             var features = resp.data.features;
             return features.map(function(f) {
-                return new ComplexFeature({
-                    leftSec: f['left_sec'],
-                    rightSec: f['right_sec'],
-                    subunits: f['subgroup'].split(';')
-                });
+                return new ComplexFeature(
+                    f['left_sec'],
+                    f['right_sec'],
+                    f['subgroup'].split(';')
+                );
             });
         }, function() {
             return [];
