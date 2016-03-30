@@ -22,7 +22,7 @@ var ComplexFeatureFactory = function($http) {
      * @param {Array<string>} proteinIds - A list of Uniprot identifiers.
      * @returns {Array.<ComplexFeature>} A list of complex features.
      */
-    ComplexFeature.getUsingProteinIds = function(proteinIds) {
+    ComplexFeature.query = function(proteinIds) {
         return $http.put('/api/complexfeatures', {
             'uniprot_ids': proteinIds
         })

@@ -55,7 +55,7 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
 
             // After having received the chromatograms, query
             // the server for potential complex features.
-            return ComplexFeature.getUsingProteinIds(proteinIds);
+            return ComplexFeature.query(proteinIds);
         }).then(function(features) {
             self.isFeatureQueryRunning = false;
             self.complexFeatures = features;
