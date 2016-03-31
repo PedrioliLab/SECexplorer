@@ -35,7 +35,7 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
             return ComplexFeature.query(proteinIds);
         }).then(function(features) {
             self.isFeatureQueryRunning = false;
-            self.complexFeatures = features;
+            self.complexFeatures.features = features;
         })
         .catch(function(err) {
             console.log(err);

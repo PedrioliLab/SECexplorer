@@ -87,7 +87,7 @@
           <div id="protein-trace-plot" ng-hide="proteinQueryCtrl.isTraceQueryRunning"></div>
         </div>
 
-        <div class="complex-candidates-container">
+        <div class="complex-candidates-container" ng-controller="ComplexCandidatesCtrl as complexCtrl">
           <h3>Complex candidates</h3>
           <spinner loading="proteinQueryCtrl.isFeatureQueryRunning"></spinner>
           <table class="table table-hover table-condensed" ng-show="!proteinQueryCtrl.isFeatureQueryRunning">
@@ -103,7 +103,8 @@
               <th>Apparent MW</th>
               <th>Delta MW</th>
             </tr>
-            <tr ng-repeat="feat in proteinQueryCtrl.complexFeatures">
+            <tr ng-repeat="feat in proteinQueryCtrl.complexFeatures.features"
+              ng-mouseover="complexCtrl.hoverTableRow($index)">
               <td>{{:: $index }}</td>
               <td>{{:: feat.subunits.length }}</td>
               <td>{{:: feat.leftSEC }}</td>
