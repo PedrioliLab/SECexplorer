@@ -29,7 +29,12 @@ var PlotService = function() {
             return trace;
         });
         var layout = {
-            margin: { t: 0 }
+            margin: { t: 0 },
+            width: 900,
+            height: 500,
+            paper_bgcolor: '#ffffff',
+            plot_bgcolor: '#ffffff'
+
         };
         Plotly.newPlot(plotElement, data, layout);
     };
