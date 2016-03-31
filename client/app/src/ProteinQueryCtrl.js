@@ -60,9 +60,10 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
             self.isFeatureQueryRunning = false;
             self.complexFeatures = features;
         })
-        .catch(function() {
+        .catch(function(err) {
+            console.log(err);
             self.isFeatureQueryRunning = false;
-            self.isTraceQueryRunning = true;
+            self.isTraceQueryRunning = false;
         });
     };
 

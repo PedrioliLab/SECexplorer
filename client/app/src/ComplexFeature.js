@@ -1,4 +1,4 @@
-var ComplexFeatureFactory = function($http) {
+var ComplexFeatureFactory = function($http, $q) {
     /**
      * Constructor function for comple features.
      * @param {number} leftSEC - The SEC fraction that forms the left boundary
@@ -38,14 +38,15 @@ var ComplexFeatureFactory = function($http) {
                     f.score
                 );
             });
-        }, function() {
-            return [];
+        })
+        .catch(function(resp) {
+            return $q.reject(resp.data.error);
         });
     };
 
     return ComplexFeature;
 };
 
-angular.module('app').factory('ComplexFeature', ['$http', ComplexFeatureFactory]);
+angular.module('app').factory('ComplexFeature', ['$http', '$q', ComplexFeatureFactory]);
 
 module.exports = ComplexFeatureFactory;

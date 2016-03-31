@@ -1,13 +1,12 @@
 import json
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, make_response
 
 from data import get_protein_traces_by_id
 from feature import compute_complex_features
 
 
 api = Blueprint('api', __name__)
-
 
 
 @api.route('/complexfeatures', methods=['PUT'])
@@ -31,14 +30,32 @@ def get_complex_features():
     """
     data = json.loads(request.data)
     uniprot_ids = data.get('uniprot_ids')
-    features = compute_complex_features(uniprot_ids)
-    return jsonify({
-        'features': features
-    })
+    try:
+        features = compute_complex_features(uniprot_ids)
+        return jsonify({
+            'features': features
+        })
+    except Exception as err:
+        return make_response(jsonify(error=err.message), 500)
 
 
 @api.route('/proteins', methods=['GET'])
 def get_proteins():
+    """Get a list of protein chromatograms.
+
+    Response:
+    {
+        proteins: [
+           {
+               uniprot_id: number,
+               intensity: Array<number>,
+               sec: Array<number>
+           },
+           ...
+        ]
+    }
+
+    """
     uniprot_ids_str = request.args.get('uniprot_ids')
 
     if uniprot_ids_str is None:
@@ -56,7 +73,7 @@ def get_proteins():
                 'sec': sec_positions
             })
     except ValueError as err:
-        return err.message, 404
+        make_response(jsonify(error=err.message), 404)
 
     return jsonify({
         'proteins': proteins

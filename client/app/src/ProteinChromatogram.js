@@ -1,4 +1,4 @@
-var ProteinChromatogramFactory = function($http) {
+var ProteinChromatogramFactory = function($http, $q) {
     /**
      * Constructor function for protein chromatograms.
      * @param {string} uniprotId - The uniprot identifier for this
@@ -31,16 +31,17 @@ var ProteinChromatogramFactory = function($http) {
                     p.sec
                 );
             });
-        }, function() {
-            return [];
-        });
+        })
+        .catch(function(resp) {
+            return $q.reject(resp.data.error);
+        })
     };
 
     return ProteinChromatogram;
 };
 
 angular.module('app').factory('ProteinChromatogram', [
-    '$http', ProteinChromatogramFactory
+    '$http', '$q', ProteinChromatogramFactory
 ]);
 
 module.exports = ProteinChromatogramFactory;
