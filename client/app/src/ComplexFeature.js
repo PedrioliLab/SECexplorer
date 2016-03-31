@@ -17,7 +17,30 @@ var ComplexFeatureFactory = function($http, $q) {
         this.rightSEC = rightSEC;
         this.subunits = subunits;
         this.score = score;
+
+        this.apparentMW = ComplexFeature.convertSECtoMW(
+            (this.rightSEC - this.leftSEC) / 2
+        );
     }
+
+    /**
+     * Convert a molecular weight into the approximate SEC fraction.
+     * @param {number} mw - The molecular weight.
+     * @returns {number} The approximate SEC fraction.
+     */
+    ComplexFeature.convertMWtoSEC = function(mw) {
+        return Math.round(Math.log(mw) - 9.682 / -0.104);
+    };
+
+    /**
+     * Convert a SEC fraction into the approximate molecular weight.
+     * @param {number} sec - The SEC fraction.
+     * @returns {number} The approximate molecular weight.
+     */
+    ComplexFeature.convertSECtoMW = function(sec) {
+        var logMW = -0.0453 * sec + 4.205;
+        return Math.exp(logMW);
+    };
 
     /**
      * Get a list of subgroup features for a list of protein ids.

@@ -115,7 +115,7 @@
               <td>{{:: feat.subunits.join(', ') }}</td>
               <td>E.g. 1:2:3, same order as subunit col</td>
               <th>SUM(INtensity-based stoich * MW_subunits) MW</th>
-              <th>convertSECtoMW(right_sec - left_sec)</th>
+              <th>{{:: proteinQueryCtrl.roundFloat(feat.apparentMW, 1) }} kDa</th>
               <th>Apparent MW - Estimated MW</th>
             </tr>
           </table>
