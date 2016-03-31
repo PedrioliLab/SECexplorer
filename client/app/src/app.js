@@ -20,6 +20,7 @@ var app = angular.module('app', [
 
 require('./PlotService');
 require('./complexFeatures');
+require('./proteinTraces');
 require('./ComplexFeature');
 require('./ProteinChromatogram');
 require('./ProteinQueryCtrl');

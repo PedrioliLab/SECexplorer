@@ -4,8 +4,10 @@ var _ = require('underscore');
  * A controller that retreives and plots protein chromatograms and
  * queries the server for complex features.
  */
-var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogram', 'complexFeatures', 'plotService',
-                        function($scope, $http, ComplexFeature, ProteinChromatogram, complexFeatures, plotService) {
+var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogram',
+                        'complexFeatures', 'plotService', 'proteinTraces',
+                        function($scope, $http, ComplexFeature, ProteinChromatogram,
+                                 complexFeatures, plotService, proteinTraces) {
     var self = this;
 
     this.isTraceQueryRunning = false;
@@ -24,6 +26,7 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
         // First get the protein chromatograms.
         ProteinChromatogram.get(ids)
         .then(function(proteins) {
+            proteinTraces.traces = proteins;
             plotService.plotProteinTraces(proteins);
             var proteinIds = _(proteins).pluck('uniprotId');
 

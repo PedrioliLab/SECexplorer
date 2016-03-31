@@ -8,15 +8,25 @@ var PlotService = function() {
      * @param {Array.<ProteinChromatogram>} proteins - The protein
      * chromatograms to plot.
      */
-    this.plotProteinTraces = function(proteins) {
+    this.plotProteinTraces = function(proteins, highlightIds) {
         var plotElement = $('#protein-trace-plot').get(0);
         var data = _(proteins).map(function(p) {
-            return {
-                name: p.uniprot_id,
+            var trace =  {
+                name: p.uniprotId,
                 y: p.intensity,
                 x: p.sec,
                 type: 'scatter'
             };
+
+            if (highlightIds !== undefined) {
+                var shouldHighlightTrace = highlightIds.indexOf(p.uniprotId) !== -1;
+                trace.line = {};
+                if (!shouldHighlightTrace) {
+                    trace.line.color = 'rgba(150, 150, 150, 0.25)';
+                }
+            }
+
+            return trace;
         });
         var layout = {
             margin: { t: 0 }
