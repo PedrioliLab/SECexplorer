@@ -18,6 +18,7 @@ var app = angular.module('app', [
     'ui.bootstrap',
 ]);
 
+require('./PlotService');
 require('./ComplexFeature');
 require('./ProteinChromatogram');
 require('./ProteinQueryCtrl');
