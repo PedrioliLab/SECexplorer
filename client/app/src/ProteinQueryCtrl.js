@@ -65,6 +65,17 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
             self.isTraceQueryRunning = true;
         });
     };
+
+    /**
+     * Round a number to `digits` after the decimal point.
+     * @param {number} num - The number to round.
+     * @param {number} digits - The precision. Default is 3.
+     * @returns {number}
+     */
+    this.roundFloat = function(num, digits) {
+        digits = digits !== undefined ? digits : 3;
+        return Math.round(num * Math.pow(10, digits)) / Math.pow(10, digits);
+    };
 }];
 
 angular.module('app').controller('ProteinQueryCtrl', ProteinQueryCtrl);

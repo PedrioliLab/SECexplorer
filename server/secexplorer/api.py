@@ -12,6 +12,23 @@ api = Blueprint('api', __name__)
 
 @api.route('/complexfeatures', methods=['PUT'])
 def get_complex_features():
+    """Compute potential complex features for subcomplexes consisting of a subset
+    of the queried proteins.
+
+    Response:
+    {
+        features: [
+           {
+               left_sec: number,
+               right_sec: number,
+               subgroup: Array<string>,
+               score: number
+           },
+           ...
+        ]
+    }
+
+    """
     data = json.loads(request.data)
     uniprot_ids = data.get('uniprot_ids')
     features = compute_complex_features(uniprot_ids)

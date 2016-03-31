@@ -7,14 +7,16 @@ var ComplexFeatureFactory = function($http) {
      * boundary of this feature.
      * @param {Array.<string>} subunits - An array of Uniprot Ids of the
      * subunit of this feature.
+     * @param {number} score - The intra-group correlation score.
      * @class
      * @classdesc The representation of a complex/subgroup feature detected
      * server-side using the sliding window clustering algorithm.
      */
-    function ComplexFeature(leftSEC, rightSEC, subunits) {
+    function ComplexFeature(leftSEC, rightSEC, subunits, score) {
         this.leftSEC = leftSEC;
         this.rightSEC = rightSEC;
         this.subunits = subunits;
+        this.score = score;
     }
 
     /**
@@ -30,9 +32,10 @@ var ComplexFeatureFactory = function($http) {
             var features = resp.data.features;
             return features.map(function(f) {
                 return new ComplexFeature(
-                    f['left_sec'],
-                    f['right_sec'],
-                    f['subgroup'].split(';')
+                    f.left_sec,
+                    f.right_sec,
+                    f.subgroup.split(';'),
+                    f.score
                 );
             });
         }, function() {
