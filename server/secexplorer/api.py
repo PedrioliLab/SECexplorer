@@ -9,6 +9,7 @@ from feature import compute_complex_features
 api = Blueprint('api', __name__)
 
 
+# TODO: Update docs and output to output structure
 @api.route('/complexfeatures', methods=['PUT'])
 def get_complex_features():
     """Compute potential complex features for subcomplexes consisting of a subset
