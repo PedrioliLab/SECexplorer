@@ -10,16 +10,18 @@ var ComplexCandidatesCtrl =
      * Callback for a mouse-hover event on a row of the complex feature table.
      * @param {number} index - Index in the complex feature list.
      */
-    this.hoverTableRow = function(index) {
-        console.log('HOVER:', complexFeatures.features[index]);
+    this.clickTableRow = function(index) {
+        console.log('Click:', complexFeatures.features[index]);
         var highlightIds = complexFeatures.features[index].subunits;
-        plotService.plotProteinTraces(proteinTraces.traces, highlightIds);
+        var leftSEC = complexFeatures.features[index].leftSEC;
+        var rightSEC = complexFeatures.features[index].rightSEC;
+        plotService.plotProteinTraces(proteinTraces.traces, highlightIds, leftSEC, rightSEC);
     };
 
     /**
      * Callback for a mouse-leave event on the complex feature table.
      */
-    this.leaveTable = function() {
+    this.showAllTraces = function() {
         plotService.plotProteinTraces(proteinTraces.traces);
     };
 }];

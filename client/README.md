@@ -31,7 +31,7 @@ These tasks (and others) are automatically run when `gulp` is executed in the
 client directory:
 
     $ cd secexplorer/client
-    $ grunt
+    $ gulp
 
 Furthermore, as soon as any LESS or JS file is changed, the build process
 restarts automatically.

@@ -92,8 +92,10 @@
           <spinner loading="proteinQueryCtrl.isFeatureQueryRunning"></spinner>
           <table class="table table-hover table-condensed"
               ng-show="!proteinQueryCtrl.isFeatureQueryRunning"
-              ng-mouseleave="complexCtrl.leaveTable()">
-            <tr>
+              >
+            <tr
+              ng-mousedown="complexCtrl.showAllTraces()"
+                >
               <th></th>
               <th># subunits</th>
               <th>Start SEC</th>
@@ -106,7 +108,7 @@
               <th>Delta MW</th>
             </tr>
             <tr ng-repeat="feat in proteinQueryCtrl.complexFeatures.features"
-              ng-mouseover="complexCtrl.hoverTableRow($index)">
+              ng-mousedown="complexCtrl.clickTableRow($index)">
               <td>{{:: $index }}</td>
               <td>{{:: feat.subunits.length }}</td>
               <td>{{:: feat.leftSEC }}</td>
