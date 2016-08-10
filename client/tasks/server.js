@@ -13,7 +13,7 @@ module.exports = function (gulp, $) {
             middleware: function(connect, opt) {
                 return [
                     proxy('/api', {
-                        target: 'http://localhost:8020',
+                        target: 'http://127.0.0.1:8020',
                         changeOrigin:true
                     })
                 ];
