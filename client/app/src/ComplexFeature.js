@@ -12,17 +12,20 @@ var ComplexFeatureFactory = function($http, $q) {
      * @classdesc The representation of a complex/subgroup feature detected
      * server-side using the sliding window clustering algorithm.
      */
-    function ComplexFeature(leftSEC, rightSEC, subunits, score) {
+    function ComplexFeature(leftSEC, rightSEC, apex, subunits, score, stoichiometry_estimated,
+                            complex_mw_estimated) {
         this.leftSEC = leftSEC;
         this.rightSEC = rightSEC;
+        this.apex = apex;
         this.subunits = subunits;
         this.score = score;
+        this.stoichiometry_estimated = stoichiometry_estimated;
+        this.complex_mw_estimated = complex_mw_estimated;
 
         this.apparentMW = ComplexFeature.convertSECtoMW(
             (this.rightSEC - this.leftSEC) / 2
         );
     }
-
     /**
      * Convert a molecular weight into the approximate SEC fraction.
      * @param {number} mw - The molecular weight.
@@ -55,10 +58,13 @@ var ComplexFeatureFactory = function($http, $q) {
             var features = resp.data.features;
             return features.map(function(f) {
                 return new ComplexFeature(
-                    f.left_sec,
-                    f.right_sec,
-                    f.subgroup.split(';'),
-                    f.score
+                    f.left_pp,
+                    f.right_pp,
+                    f.apex,
+                    f.subunits_detected.split(';'),
+                    f.sw_score,
+                    f.stoichiometry_estimated,
+                    f.complex_mw_estimated
                 );
             });
         })

@@ -115,12 +115,12 @@
               <td>{{:: feat.subunits.length }}</td>
               <td>{{:: feat.leftSEC }}</td>
               <td>{{:: feat.rightSEC }}</td>
-              <td>{{:: proteinQueryCtrl.roundFloat(feat.score) }}</td>
+              <td style="text-alignt: right">{{:: feat.score | number : 3 }}</td>
               <td>{{:: feat.subunits.join(', ') }}</td>
-              <td>E.g. 1:2:3, same order as subunit col</td>
-              <th>SUM(INtensity-based stoich * MW_subunits) MW</th>
-              <th>{{:: proteinQueryCtrl.roundFloat(feat.apparentMW, 1) }} kDa</th>
-              <th>Apparent MW - Estimated MW</th>
+              <td>{{:: feat.stoichiometry_estimated }}</td>
+              <td style="text-align: right">{{:: feat.complex_mw_estimated | number: 2 }}</td>
+              <td style="text-alignt: right">{{:: feat.apparentMW | number: 2 }} kDa</td>
+              <td>{{:: feat.complex_mw_estimated - proteinQueryCtrl.roundFloat(feat.apparentMW, 1) }} kDa</td>
             </tr>
           </table>
         </div>
