@@ -2,8 +2,7 @@ import json
 
 from flask import Blueprint, jsonify, request, make_response
 
-from data import get_protein_traces_by_id
-from feature import compute_complex_features
+from feature import compute_complex_features, get_protein_traces_by_id
 
 
 api = Blueprint('api', __name__)
@@ -61,15 +60,15 @@ def get_proteins():
     if uniprot_ids_str is None:
         return 'Malformed request', 400
 
+    proteins = []
     try:
         uniprot_ids = uniprot_ids_str.split(',')
         protein_traces = get_protein_traces_by_id(uniprot_ids)
         sec_positions = map(int, protein_traces.columns)
-        proteins = []
         for uid, trace in protein_traces.iterrows():
             proteins.append({
                 'uniprot_id': uid,
-                'intensity': trace.tolist(),
+                'intensity': map(float, trace.tolist()),
                 'sec': sec_positions
             })
     except ValueError as err:
