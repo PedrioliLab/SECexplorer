@@ -33,6 +33,7 @@
     "angular-ui-router": "^0.2.18",
     "jquery": "^2.2.1",
     "plotly.js": "^1.6.3",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "color-scheme": "^0.0.5"
   }
 }

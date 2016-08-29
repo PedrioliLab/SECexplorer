@@ -58,9 +58,10 @@ def compute_complex_features(protein_ids):
     """
     gui: choose uniprotkb, uniprotkb_name, gene_names, ensembl, hgnc
     gui: felder für fehler
-    gui: plotte left / right boundaries / apex
+
+    x gui: plotte left / right boundaries / apex
     x gui: highlight color of activated row
-    gui: traces plotten
+    x gui: traces plotten
     """
 
     failed_conversion = pandas2ri.ri2py_listvector(result[0][0])
