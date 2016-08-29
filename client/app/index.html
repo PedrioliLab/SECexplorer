@@ -108,7 +108,9 @@
               <th>Delta MW</th>
             </tr>
             <tr ng-repeat="feat in proteinQueryCtrl.complexFeatures.features"
-              ng-mousedown="complexCtrl.clickTableRow($index)">
+              ng-mousedown="complexCtrl.clickTableRow($index)"
+              ng-class="{'selected':$index == selectedRow}"
+              >
               <td>{{:: $index }}</td>
               <td>{{:: feat.subunits.length }}</td>
               <td>{{:: feat.leftSEC }}</td>

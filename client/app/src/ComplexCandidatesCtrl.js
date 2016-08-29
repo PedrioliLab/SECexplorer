@@ -11,6 +11,7 @@ var ComplexCandidatesCtrl =
      * @param {number} index - Index in the complex feature list.
      */
     this.clickTableRow = function(index) {
+        $scope.selectedRow = index;
         console.log('Click:', complexFeatures.features[index]);
         var highlightIds = complexFeatures.features[index].subunits;
         var leftSEC = complexFeatures.features[index].leftSEC;
