@@ -8,7 +8,7 @@ var PlotService = function() {
      * @param {Array.<ProteinChromatogram>} proteins - The protein
      * chromatograms to plot.
      */
-    this.plotProteinTraces = function(proteins, highlightIds, leftSEC, rightSEC) {
+    this.plotProteinTraces = function(proteins, highlightIds, leftSEC, rightSEC, apex) {
         var plotElement = $('#protein-trace-plot').get(0);
         var data = _(proteins).map(function(p) {
             var trace =  {
@@ -43,12 +43,26 @@ var PlotService = function() {
                     y0: 0,
                     x1: rightSEC,
                     y1: max_intensity * 1.05,
-                    fillcolor: '#f0f0ff',
-                    opacity: 0.35,
+                    fillcolor: '#e0e0f0',
+                    opacity: 0.45,
                     line: {
                         width: 0
                     },
                     layer: 'below'
+                },
+                {
+                    type: 'line',
+                    x0: apex,
+                    y0: 0,
+                    x1: apex,
+                    y1: max_intensity * 1.05,
+                    fillcolor: '#3030ff',
+                    opacity: 0.15,
+                    line: {
+                        width: 3,
+                        dash: 'dot',
+                    },
+                    layer: 'above',
                 }
             ];
 
