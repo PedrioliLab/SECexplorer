@@ -30,49 +30,28 @@
       <div class="left-pane col-xs-3"
         ng-controller="ListInputCtrl as listInputCtrl">
         <div class="protein-id-input">
-          <h3>Select proteins by Uniprot ID</h3>
+          <h3>Select proteins by ID</h3>
+
+          <div>
+          <label>ID type</label>
+          <select class="form-control" ng-model="listInputCtrl.idType">
+              <option value="UNIPROTKB">UniProtKB</option>
+              <option value="UNIPROTKB_name">UniProtKB Name</option>
+              <option value="Gene_names">Gene Name</option>
+              <option value="ENSEMBL">ENSEMBL</option>
+              <option value="HGNC">HGNC</option>
+          </select>
+        </div>
+        <br/>
+
 
           <div class="form-group">
-            <label>List of UniProt IDs</label>
+            <label>List of IDs</label>
             <textarea rows=10 class="form-control" ng-model="listInputCtrl.inputProteinIds"></textarea>
           </div>
 
           <div class="btn-container">
             <button class="btn btn-primary btn-lg" ng-click="listInputCtrl.query()">
-              Submit
-            </button>
-          </div>
-        </div>
-
-        <div class="protein-input-separator">OR</div>
-
-        <div class="protein-annotation-input">
-          <h3>Select proteins by annotation/GO</h3>
-
-          <div class="form-group">
-            <label>Annotation type</label>
-            <select class="form-control">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Value</label>
-            <select class="form-control">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-          </div>
-
-          <div class="btn-container">
-            <button class="btn btn-primary btn-lg" ng-click="proteinQueryCtrl.queryUsingProteinIds()">
               Submit
             </button>
           </div>
@@ -120,7 +99,7 @@
               <td>{{:: feat.stoichiometry_estimated }}</td>
               <td style="text-align: right">{{:: feat.complex_mw_estimated | number: 2 }}</td>
               <td style="text-alignt: right">{{:: feat.apparentMW | number: 2 }} kDa</td>
-              <td>{{:: feat.complex_mw_estimated - proteinQueryCtrl.roundFloat(feat.apparentMW, 1) }} kDa</td>
+              <td>{{:: (feat.complex_mw_estimated - feat.apparentMW) | number: 2 }} kDa</td>
             </tr>
           </table>
         </div>

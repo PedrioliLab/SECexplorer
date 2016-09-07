@@ -15,16 +15,16 @@ robjects.numpy2ri.activate()
 secprofiler = importr('SECprofiler')
 
 
-def get_protein_traces_by_id(protein_ids):
-    result = secprofiler.runSECexplorer(protein_ids, "UNIPROTKB")
+def get_protein_traces_by_id(protein_ids, id_type):
+    result = secprofiler.runSECexplorer(protein_ids, id_type)
     traces = pandas2ri.ri2py_dataframe(result[1][0][0])
     traces = traces.set_index(["id"])
     traces.index.name = "protein_id"
     return traces
 
 
-def _compute_complex_features(protein_ids):
-    traces = get_protein_traces_by_id(protein_ids)
+def _compute_complex_features(protein_ids, id_type):
+    traces = get_protein_traces_by_id(protein_ids, id_type)
     result = secprofiler.findComplexFeatures(traces, traces.index, 0.99)
     features = pandas2ri.ri2py(result[1])
     print(features)
@@ -36,8 +36,8 @@ def _compute_complex_features(protein_ids):
     return features_dicts
 
 
-def compute_complex_features(protein_ids):
-    result = secprofiler.runSECexplorer(protein_ids, "UNIPROTKB")
+def compute_complex_features(protein_ids, id_type):
+    result = secprofiler.runSECexplorer(protein_ids, id_type)
 
     features = pandas2ri.ri2py_dataframe(result[1][1])
     # traces = pandas2ri.ri2py_dataframe(result[1][0][0])

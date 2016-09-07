@@ -18,6 +18,7 @@ var ListInputCtrl = ['$scope', function($scope) {
     // interface. This should be a newline-separated list of protein
     // identifiers.
     this.inputProteinIds = defaultProteinIds.join('\n');
+    this.idType = "UNIPROTKB";
     
     /**
      * Start the query for protein chromatograms and complex features.
@@ -26,7 +27,7 @@ var ListInputCtrl = ['$scope', function($scope) {
         // Trim the newline-separated string of protein identifiers from the left and from
         // the right and split it into a list of individual strings.
         var ids = this.inputProteinIds.replace(/^\s+|\s+$/g, '').split('\n');
-        $scope.proteinQueryCtrl.queryUsingProteinIds(ids);
+        $scope.proteinQueryCtrl.queryUsingProteinIds(ids, this.idType);
     };
 
     // When this class is created the query should already be done

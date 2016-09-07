@@ -21,21 +21,21 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
      * @param {Array.<ProteinChromatogram>} proteins - The protein
      * chromatograms to plot.
      */
-    this.queryUsingProteinIds = function(ids) {
+    this.queryUsingProteinIds = function(ids, idType) {
         this.isTraceQueryRunning = true;
         // First get the protein chromatograms.
-        ProteinChromatogram.get(ids)
+        ProteinChromatogram.get(ids, idType)
         .then(function(proteins) {
             proteinTraces.traces = proteins;
             plotService.plotProteinTraces(proteins);
-            var proteinIds = _(proteins).pluck('uniprotId');
+            var ids = _(proteins).pluck('id');
 
             self.isTraceQueryRunning = false;
             self.isFeatureQueryRunning = true;
 
             // After having received the chromatograms, query
             // the server for potential complex features.
-            return ComplexFeature.query(proteinIds);
+            return ComplexFeature.query(ids, idType);
         }).then(function(features) {
             self.isFeatureQueryRunning = false;
             self.complexFeatures.features = features;

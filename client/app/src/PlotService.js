@@ -41,7 +41,7 @@ var PlotService = function() {
                 };
 
                 var trace =  {
-                    name: p.uniprotId,
+                    name: p.id,
                     x: x,
                     y: y,
                     type: 'scatter',
@@ -54,7 +54,7 @@ var PlotService = function() {
                     opacity: 1.0
                 };
 
-                var shouldHighlightTrace = highlightIds.indexOf(p.uniprotId) !== -1;
+                var shouldHighlightTrace = highlightIds.indexOf(p.id) !== -1;
                 if (!shouldHighlightTrace) {
                     trace.line.color = 'rgba(150, 150, 150, 0.7)';
                 }
@@ -66,7 +66,7 @@ var PlotService = function() {
         var data_thin = _(proteins).map(function(p, index) {
 
             var trace =  {
-                name: p.uniprotId,
+                name: p.id,
                 x: p.sec,
                 y: p.intensity,
                 type: 'scatter',
@@ -106,7 +106,7 @@ var PlotService = function() {
                     fillcolor: '#3030ff',
                     opacity: 0.25,
                     line: {
-                        width: 3,
+                        width: 2,
                         dash: 'dot',
                     },
                     layer: 'above',

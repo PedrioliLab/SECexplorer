@@ -47,12 +47,14 @@ var ComplexFeatureFactory = function($http, $q) {
 
     /**
      * Get a list of subgroup features for a list of protein ids.
-     * @param {Array<string>} proteinIds - A list of Uniprot identifiers.
+     * @param {Array<string>} proteinIds - A list of protein identifiers.
+     * @param {string} idType - A string like "UNIPROTKB"
      * @returns {Array.<ComplexFeature>} A list of complex features.
      */
-    ComplexFeature.query = function(proteinIds) {
+    ComplexFeature.query = function(proteinIds, idType) {
         return $http.put('/api/complexfeatures', {
-            'uniprot_ids': proteinIds
+            'ids': proteinIds,
+            'id_type': idType
         })
         .then(function(resp) {
             var features = resp.data.features;

@@ -28,9 +28,10 @@ def get_complex_features():
 
     """
     data = json.loads(request.data)
-    uniprot_ids = data.get('uniprot_ids')
+    ids = data.get('ids')
+    id_type = data.get('id_type')
     try:
-        features = compute_complex_features(uniprot_ids)
+        features = compute_complex_features(ids, id_type)
         return jsonify({
             'features': features
         })
@@ -46,7 +47,8 @@ def get_proteins():
     {
         proteins: [
            {
-               uniprot_id: number,
+               id: number,
+               id_type: 'UNIPROTKB',
                intensity: Array<number>,
                sec: Array<number>
            },
@@ -55,19 +57,21 @@ def get_proteins():
     }
 
     """
-    uniprot_ids_str = request.args.get('uniprot_ids')
+    ids_str = request.args.get('ids')
+    id_type = request.args.get('id_type')
 
-    if uniprot_ids_str is None:
+    if ids_str is None:
         return 'Malformed request', 400
 
     proteins = []
     try:
-        uniprot_ids = uniprot_ids_str.split(',')
-        protein_traces = get_protein_traces_by_id(uniprot_ids)
+        ids = ids_str.split(',')
+        protein_traces = get_protein_traces_by_id(ids, id_type)
         sec_positions = map(int, protein_traces.columns)
         for uid, trace in protein_traces.iterrows():
             proteins.append({
-                'uniprot_id': uid,
+                'id': uid,
+                'id_type': id_type,
                 'intensity': map(float, trace.tolist()),
                 'sec': sec_positions
             })
