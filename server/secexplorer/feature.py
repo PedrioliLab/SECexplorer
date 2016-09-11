@@ -1,4 +1,5 @@
 #encoding: utf-8
+from __future__ import absolute_import
 
 from rpy2 import robjects
 from rpy2.robjects.packages import importr
@@ -6,6 +7,10 @@ from rpy2.robjects import pandas2ri
 from rpy2.robjects import numpy2ri
 
 import sys
+
+base = importr('base')
+print >> sys.stderr, base.R_home()
+print >> sys.stderr, base._libPaths()
 
 pandas2ri.activate()
 numpy2ri.activate()

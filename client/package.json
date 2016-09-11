@@ -34,6 +34,7 @@
     "jquery": "^2.2.1",
     "plotly.js": "^1.6.3",
     "underscore": "^1.8.3",
-    "color-scheme": "^0.0.5"
+    "color-scheme": "^0.0.5",
+    "http-server": "^0.9.0"
   }
 }

@@ -1,8 +1,10 @@
+from __future__ import absolute_import
+
 import json
 
 from flask import Blueprint, jsonify, request, make_response
 
-from feature import compute_complex_features, get_protein_traces_by_id
+from .feature import compute_complex_features, get_protein_traces_by_id
 
 
 api = Blueprint('api', __name__)
@@ -67,12 +69,12 @@ def get_proteins():
     try:
         ids = ids_str.split(',')
         protein_traces = get_protein_traces_by_id(ids, id_type)
-        sec_positions = map(int, protein_traces.columns)
+        sec_positions = list(map(int, protein_traces.columns))
         for uid, trace in protein_traces.iterrows():
             proteins.append({
                 'id': uid,
                 'id_type': id_type,
-                'intensity': map(float, trace.tolist()),
+                'intensity': list(map(float, trace.tolist())),
                 'sec': sec_positions
             })
     except ValueError as err:
