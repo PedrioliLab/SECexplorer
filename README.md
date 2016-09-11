@@ -8,33 +8,35 @@ This project consists of two parts:
 - The `client/` folder contains a javascript-based frontend making use of the framework
   [angularjs](https://angularjs.org/).
 
-- A `server/` folder holds the python-based backend server based on
-  [flask](http://flask.pocoo.org/).  This backend in uses `rpy2` to execute the functions from the
-  `SECprofiler´R package.
+- A `server/` folder holds Python code for the backend server based on
+  [flask](http://flask.pocoo.org/).  Further the backend uses `rpy2` to execute the functions from the
+  `SECprofiler` R package.
 
 
 How is the web server setup ?
 -----------------------------
 
-The client runs a `nodejs` server on port 80 which currently only serves the `index.html` file plus
-the referenced static java script and css files.
+When we open a web browser and request `http://sec-explorer.ethz.ch` we communicate with
+a `nodejs` web server listening on port 80. This server is configured and setup in the `client` folder.
 
-The backend Python server is implemented with `flask`. Apache listens on port 8020 and forwards
-requests to `flask` using `mod_wsgi`.
+Currently this web server only serves the `index.html` file plus the referenced static java script and css files. 
 
-We implemented a unit file `sec_explorer.server` for `systemd` for proper startup and shutdown of
-this processes. More details below.
+The clients  javascript code requests the functions from the `R` pacakge `SECprofiler` by accessing the backend server who offers a web service on the URL `http://127.0.0.1:8020/app`. 
 
+This backend Python server is implemented with `flask`. Apache listens on port 8020 and forwards requests to the `app.wsgi` script using the apache module `mod_wsgi`.
 
 
 How to setup and install the web server
-=========================
+----------------------------------------
 
 **First read the `client/README.md` file for installing `nodejs` and the requires javascript 
 packages.**
 
 **Furter check the installation instructions in the `SECprofiler` package. This `R` package must be
 accesssible by `rpy2` within the Python backend.**
+
+We implemented a unit file `sec_explorer.server` for `systemd` for proper startup and shutdown of
+this processes. More details below.
 
 
 *The following instructions where developed and tested on `Ubuntu 16.04.1 LTS`. They should work for
@@ -66,6 +68,12 @@ How to start / stop the web server
 
 ```bash
 $ sudo systemctl start sec_explorer.service
+```
+
+If this fails or in case you need more information about the status of the involved processes run
+
+```bash
+$ sudo systemctl status sec_explorer.service apache2.service
 ```
 
 ```bash
