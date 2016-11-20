@@ -24,46 +24,7 @@ var PlotService = function() {
     this.plotProteinTraces = function(proteins, highlightIds, leftSEC, rightSEC, apex) {
         var plotElement = $('#protein-trace-plot').get(0);
 
-        var data_thick = [];
-
-        if (leftSEC !== undefined && rightSEC !== undefined) {
-            data_thick = _(proteins).map(function(p, index) {
-
-                var x = [];
-                var y = [];
-
-                for (i = 0; i < p.sec.length; i++) {
-                    if ((p.sec[i] >= leftSEC) && (p.sec[i] <= rightSEC))
-                    {
-                        x.push(p.sec[i]);
-                        y.push(p.intensity[i]);
-                    }
-                };
-
-                var trace =  {
-                    name: p.id,
-                    x: x,
-                    y: y,
-                    type: 'scatter',
-                    hoverinfo: 'x',
-                    line: {
-                        width: 2,
-                        color: colors[index % colors.length]
-                    },
-                    mode: 'lines',
-                    opacity: 1.0
-                };
-
-                var shouldHighlightTrace = highlightIds.indexOf(p.id) !== -1;
-                if (!shouldHighlightTrace) {
-                    trace.line.color = 'rgba(150, 150, 150, 0.7)';
-                }
-
-                return trace;
-            });
-        };
-
-        var data_thin = _(proteins).map(function(p, index) {
+        var data = _(proteins).map(function(p, index) {
 
             var trace =  {
                 name: p.id,
@@ -72,22 +33,21 @@ var PlotService = function() {
                 type: 'scatter',
                 hoverinfo: 'x',
                 line: {
-                    width: 2,
-                    color: colors[index % colors.length]
+                    width: 2
                 },
                 mode: 'lines',
                 opacity: 1.0
             };
 
             if (highlightIds !== undefined) {
-                trace.opacity = 0.3;
-                    //trace.line.color = 'rgba(150, 150, 150, 0.7)';
+                var shouldHighlightTrace = highlightIds.indexOf(p.id) !== -1;
+                if (!shouldHighlightTrace) {
+                    trace.line.color = 'rgba(150, 150, 150, 0.7)';
+                }
             }
 
             return trace;
         });
-
-        var data = data_thin.concat(data_thick);
 
         var intensities = _(proteins).map(function(p) {
             return Math.max.apply(null, p.intensity);
