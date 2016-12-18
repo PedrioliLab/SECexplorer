@@ -1,6 +1,5 @@
 # encoding: utf-8
 from collections import OrderedDict
-import sys
 
 from rpy2 import robjects
 from rpy2.robjects.packages import importr
@@ -33,18 +32,30 @@ def cached_run_secexploerer(protein_ids, id_type):
 def get_protein_traces_by_id(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
     traces = pandas2ri.ri2py_dataframe(result[1][0][0])
-
-    calibration_parameters = result[1][2]
-
     traces = traces.set_index(["id"])
     traces.index.name = "protein_id"
-    return traces, calibration_parameters
+
+    features = pandas2ri.ri2py_dataframe(result[1][1])
+
+    monomer_secs = {}
+    monomer_intensities = {}
+    for subunits, monomer_sec in zip(features.subunits_detected, features.monomer_sec):
+        subunits = subunits.split(";")
+        monomer_sec = monomer_sec.split(";")
+        for (su, sec) in zip(subunits, monomer_sec):
+            monomer_secs[su] = sec
+            intensity = traces.loc[su, sec]
+            monomer_intensities[su] = intensity
+
+    calibration_parameters = result[1][2]
+    return traces, calibration_parameters, monomer_secs, monomer_intensities
 
 
 def compute_complex_features(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
 
     features = pandas2ri.ri2py_dataframe(result[1][1])
+    print(features)
 
     failed_conversion = pandas2ri.ri2py_listvector(result[0][0])
     no_ms_signal = pandas2ri.ri2py_listvector(result[0][1])

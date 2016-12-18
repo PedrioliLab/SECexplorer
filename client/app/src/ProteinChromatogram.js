@@ -9,12 +9,14 @@ var ProteinChromatogramFactory = function($http, $q) {
      * @class
      * @classdesc The representation of a protein chromatogram.
      */
-    function ProteinChromatogram(id, intensity, sec, a, b) {
+    function ProteinChromatogram(id, intensity, sec, a, b, monomer_sec, monomer_intensity) {
         this.id = id;
         this.intensity = intensity;
         this.sec = sec;
         this.a = a;     /* a, b are the calibration patterns */
         this.b = b;
+        this.monomer_sec = monomer_sec;
+        this.monomer_intensity = monomer_intensity;
     }
 
     /**
@@ -34,7 +36,9 @@ var ProteinChromatogramFactory = function($http, $q) {
                     p.intensity,
                     p.sec,
                     p.a,
-                    p.b
+                    p.b,
+                    p.monomer_sec,
+                    p.monomer_intensity
                 );
             });
         })

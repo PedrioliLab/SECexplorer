@@ -12,7 +12,7 @@ var ComplexFeatureFactory = function($http, $q) {
      * peak correlation = peak_corr
      */
     function ComplexFeature(subunits, n_subunits, completeness, apex, apex_mw,
-                            left_pp, right_pp, stoichiometry_estimated, peak_corr)
+                            left_pp, right_pp, stoichiometry_estimated, peak_corr, sec_estimated)
     {
         this.subunits = subunits;
         this.n_subunits = n_subunits;
@@ -23,25 +23,8 @@ var ComplexFeatureFactory = function($http, $q) {
         this.right_pp = right_pp;
         this.stoichiometry_estimated = stoichiometry_estimated;
         this.peak_corr = peak_corr;
+        this.sec_estimated = sec_estimated;
     }
-    /**
-     * Convert a molecular weight into the approximate SEC fraction.
-     * @param {number} mw - The molecular weight.
-     * @returns {number} The approximate SEC fraction.
-     */
-    ComplexFeature.convertMWtoSEC = function(mw) {
-        return Math.round(Math.log(mw) - 9.682 / -0.104);
-    };
-
-    /**
-     * Convert a SEC fraction into the approximate molecular weight.
-     * @param {number} sec - The SEC fraction.
-     * @returns {number} The approximate molecular weight.
-     */
-    ComplexFeature.convertSECtoMW = function(sec) {
-        var logMW = -0.0453 * sec + 4.205;
-        return Math.exp(logMW);
-    };
 
     /**
      * Get a list of subgroup features for a list of protein ids.
@@ -66,7 +49,8 @@ var ComplexFeatureFactory = function($http, $q) {
                     f.left_pp,
                     f.right_pp,
                     f.stoichiometry_estimated,
-                    f.peak_corr
+                    f.peak_corr,
+                    f.complex_sec_estimated
                 );
             });
         })

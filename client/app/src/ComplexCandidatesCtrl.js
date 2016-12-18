@@ -17,7 +17,9 @@ var ComplexCandidatesCtrl =
         var leftSEC = complexFeatures.features[index].left_pp;
         var rightSEC = complexFeatures.features[index].right_pp;
         var apex = complexFeatures.features[index].apex;
-        plotService.plotProteinTraces(proteinTraces.traces, highlightIds, leftSEC, rightSEC, apex);
+        var sec_estimated = complexFeatures.features[index].sec_estimated;
+        plotService.plotProteinTraces(proteinTraces.traces, highlightIds, leftSEC, rightSEC, apex,
+                                      sec_estimated);
     };
 
     /**

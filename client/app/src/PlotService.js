@@ -21,7 +21,7 @@ var PlotService = function() {
      * @param {Array.<ProteinChromatogram>} proteins - The protein
      * chromatograms to plot.
      */
-    this.plotProteinTraces = function(proteins, highlightIds, leftSEC, rightSEC, apex) {
+    this.plotProteinTraces = function(proteins, highlightIds, leftSEC, rightSEC, apex, sec_estimated) {
         var plotElement = $('#protein-trace-plot').get(0);
         console.log('plot');
 
@@ -34,10 +34,11 @@ var PlotService = function() {
                 type: 'scatter',
                 hoverinfo: 'x',
                 line: {
-                    width: 2
+                    width: 2,
+                    color: colors[index]
                 },
                 mode: 'lines',
-                opacity: 1.0
+                opacity: 1.0,
             };
 
             if (highlightIds !== undefined) {
@@ -49,6 +50,25 @@ var PlotService = function() {
 
             return trace;
         });
+
+        var data = data.concat(_(proteins).map(function(p, index) {
+
+            var trace =  {
+                name: p.id,
+                x: [p.monomer_sec],
+                y: [p.monomer_intensity],
+                type: 'scatter',
+                mode: 'symbols',
+                opacity: 0.5,
+                showlegend: false,
+                marker: {
+                    color: colors[index],
+                    size: 10 
+                },
+            };
+            console.log(data[index]);
+            return trace;
+        }));
 
         var intensities = _(proteins).map(function(p) {
             return Math.max.apply(null, p.intensity);
@@ -68,7 +88,6 @@ var PlotService = function() {
         var min_sec = Math.min.apply(null, min_secs);
 
         var min_x_tic = Math.floor(min_sec / 10) * 10;
-        var max_x_tic = Math.ceil(max_sec / 10) * 10;
         var n_x_tic = Math.ceil(max_sec / 10) - Math.floor(min_sec / 10) + 1;
 
         var tictext = [];
@@ -138,8 +157,22 @@ var PlotService = function() {
                     ticktext : tictext}
         };
 
-        if (leftSEC !== undefined)
+        if (leftSEC !== undefined) {
             layout['shapes'] = shapes;
+            data = data.concat(
+               [{
+                x: [sec_estimated],
+                y: [0],
+                type: 'scatter',
+                mode: 'symbols',
+                opacity: 0.6,
+                showlegend: false,
+                marker: {
+                    color: "#000000",
+                    size: 10
+                },
+            }]);
+        }
 
         Plotly.newPlot(plotElement, data, layout);
     };

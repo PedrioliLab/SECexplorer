@@ -67,7 +67,7 @@ def get_proteins():
     proteins = []
     try:
         ids = ids_str.split(',')
-        protein_traces, calibration_parameters = get_protein_traces_by_id(ids, id_type)
+        protein_traces, calibration_parameters, monomer_secs, monomer_intensities = get_protein_traces_by_id(ids, id_type)
         a, b = calibration_parameters
         sec_positions = map(int, protein_traces.columns)
         for uid, trace in protein_traces.iterrows():
@@ -77,7 +77,9 @@ def get_proteins():
                 'intensity': map(float, trace.tolist()),
                 'sec': sec_positions,
                 'a': a,
-                'b': b
+                'b': b,
+                'monomer_sec': int(monomer_secs.get(uid)),
+                'monomer_intensity': int(monomer_intensities.get(uid)),
             })
     except ValueError as err:
         make_response(jsonify(error=err.message), 404)
