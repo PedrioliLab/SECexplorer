@@ -1,30 +1,28 @@
 var ComplexFeatureFactory = function($http, $q) {
     /**
      * Constructor function for comple features.
-     * @param {number} leftSEC - The SEC fraction that forms the left boundary
-     * of this feature.
-     * @param {number} rightSEC - The SEC fraction that forms the right
-     * boundary of this feature.
-     * @param {Array.<string>} subunits - An array of Uniprot Ids of the
-     * subunit of this feature.
-     * @param {number} score - The intra-group correlation score.
-     * @class
-     * @classdesc The representation of a complex/subgroup feature detected
-     * server-side using the sliding window clustering algorithm.
+     * subunits = subunits_detected
+     * number of subunits = n_subunits_detected
+     * completeness = completeness
+     * apex=apex
+     * apex apparent MW = apex_mw
+     * left boundary = left_pp
+     * right boundary = right_pp
+     * estimated stoichiometry = stoichiometry_estimated
+     * peak correlation = peak_corr
      */
-    function ComplexFeature(leftSEC, rightSEC, apex, subunits, score, stoichiometry_estimated,
-                            complex_mw_estimated) {
-        this.leftSEC = leftSEC;
-        this.rightSEC = rightSEC;
-        this.apex = apex;
+    function ComplexFeature(subunits, n_subunits, completeness, apex, apex_mw,
+                            left_pp, right_pp, stoichiometry_estimated, peak_corr)
+    {
         this.subunits = subunits;
-        this.score = score;
+        this.n_subunits = n_subunits;
+        this.completeness = completeness;
+        this.apex = apex;
+        this.apex_mw = apex_mw;
+        this.left_pp = left_pp;
+        this.right_pp = right_pp;
         this.stoichiometry_estimated = stoichiometry_estimated;
-        this.complex_mw_estimated = complex_mw_estimated;
-
-        this.apparentMW = ComplexFeature.convertSECtoMW(
-            (this.rightSEC - this.leftSEC) / 2
-        );
+        this.peak_corr = peak_corr;
     }
     /**
      * Convert a molecular weight into the approximate SEC fraction.
@@ -60,13 +58,15 @@ var ComplexFeatureFactory = function($http, $q) {
             var features = resp.data.features;
             return features.map(function(f) {
                 return new ComplexFeature(
+                    f.subunits_detected,
+                    f.n_subunits_detected,
+                    f.completeness,
+                    f.apex,
+                    f.apex_mw,
                     f.left_pp,
                     f.right_pp,
-                    f.apex,
-                    f.subunits_detected.split(';'),
-                    f.sw_score,
                     f.stoichiometry_estimated,
-                    f.complex_mw_estimated
+                    f.peak_corr
                 );
             });
         })

@@ -13,9 +13,9 @@ var ComplexCandidatesCtrl =
     this.clickTableRow = function(index) {
         $scope.selectedRow = index;
         console.log('Click:', complexFeatures.features[index]);
-        var highlightIds = complexFeatures.features[index].subunits;
-        var leftSEC = complexFeatures.features[index].leftSEC;
-        var rightSEC = complexFeatures.features[index].rightSEC;
+        var highlightIds = complexFeatures.features[index].subunits.split(";");
+        var leftSEC = complexFeatures.features[index].left_pp;
+        var rightSEC = complexFeatures.features[index].right_pp;
         var apex = complexFeatures.features[index].apex;
         plotService.plotProteinTraces(proteinTraces.traces, highlightIds, leftSEC, rightSEC, apex);
     };
