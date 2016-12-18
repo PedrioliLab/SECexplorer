@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PID_FILE=$HERE/client.pid
+
+if test -f $PID_FILE; then
+    cat $HERE/client.pid  | xargs kill
+    rm $HERE/client.pid;
+else
+    echo "pid file" $PID_FILE "does not exist, is the server running ?"
+fi

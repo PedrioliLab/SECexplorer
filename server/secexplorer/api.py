@@ -1,9 +1,11 @@
+from __future__ import absolute_import
+
 import json
 import math
 
 from flask import Blueprint, jsonify, request, make_response
 
-from feature import compute_complex_features, get_protein_traces_by_id
+from .feature import compute_complex_features, get_protein_traces_by_id
 
 
 api = Blueprint('api', __name__)

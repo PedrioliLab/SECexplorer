@@ -7,6 +7,8 @@ from rpy2.robjects import pandas2ri
 from rpy2.robjects import numpy2ri
 
 
+base = importr('base')
+
 pandas2ri.activate()
 numpy2ri.activate()
 

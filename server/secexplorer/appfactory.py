@@ -1,8 +1,10 @@
+from __future__ import absolute_import
+
 import logging
 
 from flask import Flask
 
-from secexplorer.config import default as default_config
+from .config import default as default_config
 
 
 def create_app(config):
