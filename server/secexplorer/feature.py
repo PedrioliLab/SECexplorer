@@ -33,22 +33,12 @@ def cached_run_secexploerer(protein_ids, id_type):
 def get_protein_traces_by_id(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
     traces = pandas2ri.ri2py_dataframe(result[1][0][0])
+
+    calibration_parameters = result[1][2]
+
     traces = traces.set_index(["id"])
     traces.index.name = "protein_id"
-    return traces
-
-
-def _compute_complex_features(protein_ids, id_type):
-    traces = get_protein_traces_by_id(protein_ids, id_type)
-    result = secprofiler.findComplexFeatures(traces, traces.index, 0.99)
-    features = pandas2ri.ri2py(result[1])
-    print(features)
-    features['n_subunits'] = [len(r) for r in features.subgroup.str.split(';')]
-    features_dicts = []
-    for idx, row in features.iterrows():
-        print >> sys.stderr, row
-        features_dicts.append(row.to_dict())
-    return features_dicts
+    return traces, calibration_parameters
 
 
 def compute_complex_features(protein_ids, id_type):

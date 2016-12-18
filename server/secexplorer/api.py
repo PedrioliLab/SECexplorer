@@ -1,4 +1,5 @@
 import json
+import math
 
 from flask import Blueprint, jsonify, request, make_response
 
@@ -66,18 +67,22 @@ def get_proteins():
     proteins = []
     try:
         ids = ids_str.split(',')
-        protein_traces = get_protein_traces_by_id(ids, id_type)
+        protein_traces, calibration_parameters = get_protein_traces_by_id(ids, id_type)
+        a, b = calibration_parameters
         sec_positions = map(int, protein_traces.columns)
         for uid, trace in protein_traces.iterrows():
             proteins.append({
                 'id': uid,
                 'id_type': id_type,
                 'intensity': map(float, trace.tolist()),
-                'sec': sec_positions
+                'sec': sec_positions,
+                'a': a,
+                'b': b
             })
     except ValueError as err:
         make_response(jsonify(error=err.message), 404)
 
     return jsonify({
-        'proteins': proteins
+        'proteins': proteins,
+        'calibration_parameters': list(calibration_parameters)
     })
