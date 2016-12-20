@@ -1,10 +1,13 @@
 # encoding: utf-8
 from collections import OrderedDict
 
+import pandas as pd
+
 from rpy2 import robjects
 from rpy2.robjects.packages import importr
 from rpy2.robjects import pandas2ri
 from rpy2.robjects import numpy2ri
+from rpy2.rinterface import RRuntimeError
 
 
 base = importr('base')
@@ -23,7 +26,11 @@ def cached_run_secexploerer(protein_ids, id_type):
     key = (tuple(sorted(protein_ids)), id_type)
     if key in backend_cache:
         return backend_cache[key]
-    result = secprofiler.runSECexplorer(protein_ids, id_type)
+    try:
+        result = secprofiler.runSECexplorer(protein_ids, id_type)
+    except RRuntimeError:  # as err:
+        backend_cache[key] = None
+        return None
     while len(backend_cache) > 1000:
         first_key = backend_cache.keys()[0]
         del backend_cache[first_key]
@@ -33,9 +40,29 @@ def cached_run_secexploerer(protein_ids, id_type):
 
 def get_protein_traces_by_id(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
+    if result is None:
+        return pd.DataFrame(), [0, 0], {}, {}
+
     traces = pandas2ri.ri2py_dataframe(result[1][0][0])
     traces = traces.set_index(["id"])
     traces.index.name = "protein_id"
+
+
+    mapping_table = pandas2ri.ri2py_dataframe(result[0][3])
+    if len(mapping_table.columns) == 3:
+        mapping = dict(zip(mapping_table.iloc[:, 0],
+                           mapping_table.iloc[:, 2]))
+    else:
+        mapping = {}
+
+    labels = []
+    for uniprot_id in traces.index:
+        extra_label = mapping.get(uniprot_id)
+        if extra_label is not None:
+            label = "%s (%s)"% (uniprot_id, extra_label)
+        else:
+            label = uniprot_id
+        labels.append(label)
 
     features = pandas2ri.ri2py_dataframe(result[1][1])
 
@@ -50,22 +77,25 @@ def get_protein_traces_by_id(protein_ids, id_type):
             monomer_intensities[su] = intensity
 
     calibration_parameters = result[1][2]
-    return traces, calibration_parameters, monomer_secs, monomer_intensities
+    return traces, labels, calibration_parameters, monomer_secs, monomer_intensities
 
 
 def compute_complex_features(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
+    if result is None:
+        header = [id_type, "name"]
+        return [], [], header, protein_ids, []
 
-    features = pandas2ri.ri2py_dataframe(result[1][1])
-    print(features)
+    features_table = pandas2ri.ri2py_dataframe(result[1][1])
 
-    failed_conversion = pandas2ri.ri2py_listvector(result[0][0])
-    no_ms_signal = pandas2ri.ri2py_listvector(result[0][1])
-    successfull = pandas2ri.ri2py_listvector(result[0][2])
-    mapping_table = pandas2ri.ri2py_listvector(result[0][3])
+    failed_conversion = [cell[0] for cell in pandas2ri.ri2py_listvector(result[0][0])]
+    no_ms_signal = list(pandas2ri.ri2py_listvector(result[0][1]))
 
-    features_dicts = []
-    for idx, row in features.iterrows():
-        features_dicts.append(row.to_dict())
+    mapping_table = pandas2ri.ri2py_dataframe(result[0][3])
+    mapping_table.name = [name.split("|")[1] for name in mapping_table.name]
+    header = list(map(str, mapping_table.columns))
+    rows = [list(row) for idx, row in mapping_table.iterrows()]
 
-    return features_dicts
+    features = [row.to_dict() for idx, row in features_table.iterrows()]
+
+    return features, rows, header, failed_conversion, no_ms_signal

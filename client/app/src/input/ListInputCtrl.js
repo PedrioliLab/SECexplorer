@@ -26,7 +26,7 @@ var ListInputCtrl = ['$scope', function($scope) {
     this.query = function() {
         // Trim the newline-separated string of protein identifiers from the left and from
         // the right and split it into a list of individual strings.
-        var ids = this.inputProteinIds.replace(/^\s+|\s+$/g, '').split('\n');
+        var ids = this.inputProteinIds.replace(/^\s+|\s+$/g, '').split(/[\n; ]+/);
         $scope.proteinQueryCtrl.queryUsingProteinIds(ids, this.idType);
     };
 

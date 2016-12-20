@@ -21,9 +21,17 @@ var PlotService = function() {
      * @param {Array.<ProteinChromatogram>} proteins - The protein
      * chromatograms to plot.
      */
-    this.plotProteinTraces = function(proteins, highlightIds, leftSEC, rightSEC, apex, sec_estimated) {
+    this.plotProteinTraces = function(proteinTraces, highlightIds, leftSEC, rightSEC, apex, sec_estimated) {
         var plotElement = $('#protein-trace-plot').get(0);
         console.log('plot');
+
+        var proteins = proteinTraces.proteins;
+        var calibration_parameters = proteinTraces.calibration_parameters;
+
+        sec_to_mw = function(sec) {
+            return Math.round(Math.exp(calibration_parameters[0] + calibration_parameters[1] * sec));
+        };
+
 
         var data = _(proteins).map(function(p, index) {
 
@@ -32,10 +40,12 @@ var PlotService = function() {
                 x: p.sec,
                 y: p.intensity,
                 type: 'scatter',
-                hoverinfo: 'x',
+                hoverinfo: 'text',
+                text: p.label,
                 line: {
                     width: 2,
-                    color: colors[index]
+                    color: colors[index],
+                    dash: 'solid'
                 },
                 mode: 'lines',
                 opacity: 1.0,
@@ -45,6 +55,8 @@ var PlotService = function() {
                 var shouldHighlightTrace = highlightIds.indexOf(p.id) !== -1;
                 if (!shouldHighlightTrace) {
                     trace.line.color = 'rgba(150, 150, 150, 0.7)';
+                    trace.line.dash = 'dot';
+                    trace.line.width = 1;
                 }
             }
 
@@ -61,6 +73,8 @@ var PlotService = function() {
                 mode: 'symbols',
                 opacity: 0.5,
                 showlegend: false,
+                hoverinfo: "text",
+                text: 'SEC monomer: ' + p.monomer_sec + '<br>(' + sec_to_mw(p.monomer_sec) + ' kDa)',
                 marker: {
                     color: colors[index],
                     size: 10 
@@ -92,13 +106,10 @@ var PlotService = function() {
 
         var tictext = [];
         var ticvals = [];
-        var a = proteins[0].a;
-        var b = proteins[0].b;
 
         for (var i = 0; i < n_x_tic; i++) {
             ticvals.push(i * 10);
-            var mw = Math.exp(a + b * i * 10);
-            tictext.push(min_x_tic + i * 10 + "<br>(" + Math.round(mw) + " Da)");
+            tictext.push(min_x_tic + i * 10 + "<br>(" + sec_to_mw(i * 10) + " kDa)");
         };
 
         var shapes = [
@@ -149,16 +160,20 @@ var PlotService = function() {
 
         var layout = {
             margin: { t: 0 },
+            hovermode:'closest',
             width: 900,
             height: 500,
             paper_bgcolor: '#ffffff',
             plot_bgcolor: '#ffffff',
             xaxis: {tickvals : ticvals,
-                    ticktext : tictext}
+                    ticktext : tictext},
+            showlegend: true,
+            legend: {"orientation": "v"}
         };
 
         if (leftSEC !== undefined) {
             layout['shapes'] = shapes;
+            var mw_estimated = sec_to_mw(sec_estimated);
             data = data.concat(
                [{
                 x: [sec_estimated],
@@ -168,9 +183,11 @@ var PlotService = function() {
                 opacity: 0.6,
                 showlegend: false,
                 marker: {
-                    color: "#000000",
+                    color: '#000000',
                     size: 10
                 },
+                hoverinfo: 'text',
+                text: 'estimated SEC: ' + sec_estimated + '<br>(' + mw_estimated + ' kDA)',
             }]);
         }
 

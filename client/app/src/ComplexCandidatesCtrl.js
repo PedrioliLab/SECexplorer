@@ -18,15 +18,14 @@ var ComplexCandidatesCtrl =
         var rightSEC = complexFeatures.features[index].right_pp;
         var apex = complexFeatures.features[index].apex;
         var sec_estimated = complexFeatures.features[index].sec_estimated;
-        plotService.plotProteinTraces(proteinTraces.traces, highlightIds, leftSEC, rightSEC, apex,
-                                      sec_estimated);
+        plotService.plotProteinTraces(proteinTraces, labels, highlightIds, leftSEC, rightSEC, apex, sec_estimated);
     };
 
     /**
      * Callback for a mouse-leave event on the complex feature table.
      */
     this.showAllTraces = function() {
-        plotService.plotProteinTraces(proteinTraces.traces);
+        plotService.plotProteinTraces(proteinTraces, labels);
     };
 }];
 

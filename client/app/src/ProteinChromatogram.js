@@ -9,12 +9,11 @@ var ProteinChromatogramFactory = function($http, $q) {
      * @class
      * @classdesc The representation of a protein chromatogram.
      */
-    function ProteinChromatogram(id, intensity, sec, a, b, monomer_sec, monomer_intensity) {
+    function ProteinChromatogram(id, intensity, sec, label, monomer_sec, monomer_intensity) {
         this.id = id;
         this.intensity = intensity;
         this.sec = sec;
-        this.a = a;     /* a, b are the calibration patterns */
-        this.b = b;
+        this.label = label;
         this.monomer_sec = monomer_sec;
         this.monomer_intensity = monomer_intensity;
     }
@@ -30,17 +29,17 @@ var ProteinChromatogramFactory = function($http, $q) {
         var query = '/api/proteins?ids=' + proteinIds.join(',');
         query = query + "&id_type=" + idType
         return $http.get(query).then(function(resp) {
-            return resp.data.proteins.map(function(p) {
-                return new ProteinChromatogram(
-                    p.id,
-                    p.intensity,
-                    p.sec,
-                    p.a,
-                    p.b,
-                    p.monomer_sec,
-                    p.monomer_intensity
-                );
-            });
+            resp.data.proteins = resp.data.proteins.map(function(p) {
+                        return new ProteinChromatogram(
+                            p.id,
+                            p.intensity,
+                            p.sec,
+                            p.label,
+                            p.monomer_sec,
+                            p.monomer_intensity
+                        );
+                    });
+            return resp.data;
         })
         .catch(function(resp) {
             return $q.reject(resp.data.error);

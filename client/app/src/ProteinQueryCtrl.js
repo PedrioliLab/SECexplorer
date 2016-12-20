@@ -25,10 +25,11 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
         this.isTraceQueryRunning = true;
         // First get the protein chromatograms.
         ProteinChromatogram.get(ids, idType)
-        .then(function(proteins) {
-            proteinTraces.traces = proteins;
-            plotService.plotProteinTraces(proteins);
-            var ids = _(proteins).pluck('id');
+        .then(function(result) {
+            proteinTraces.proteins = result.proteins;
+            proteinTraces.calibration_parameters = result.calibration_parameters;
+            plotService.plotProteinTraces(proteinTraces);
+            /* var ids = _(result.proteins).pluck('id'); */
 
             self.isTraceQueryRunning = false;
             self.isFeatureQueryRunning = true;
@@ -36,9 +37,14 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
             // After having received the chromatograms, query
             // the server for potential complex features.
             return ComplexFeature.query(ids, idType);
-        }).then(function(features) {
+        }).then(function(result) {
             self.isFeatureQueryRunning = false;
-            self.complexFeatures.features = features;
+            self.complexFeatures.features = result.features;
+            self.complexFeatures.mappings = result.mappings;
+            self.complexFeatures.mapping_names = result.mapping_names;
+            self.complexFeatures.failed_conversion = result.failed_conversion;
+            self.complexFeatures.no_ms_signal = result.no_ms_signal;
+            console.log(self);
         })
         .catch(function(err) {
             console.log(err);
@@ -47,16 +53,6 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
         });
     };
 
-    /**
-     * Round a number to `digits` after the decimal point.
-     * @param {number} num - The number to round.
-     * @param {number} digits - The precision. Default is 3.
-     * @returns {number}
-     */
-    this.roundFloat = function(num, digits) {
-        digits = digits !== undefined ? digits : 3;
-        return Math.round(num * Math.pow(10, digits)) / Math.pow(10, digits);
-    };
 }];
 
 angular.module('app').controller('ProteinQueryCtrl', ProteinQueryCtrl);

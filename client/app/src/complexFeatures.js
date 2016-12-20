@@ -1,5 +1,9 @@
 var complexFeatures = {
-    features: []
+    features: [],
+    mappings: [],
+    mapping_names: [],
+    failed_conversion: [],
+    no_ms_signal: []
 };
 
 angular.module('app').value('complexFeatures', complexFeatures);

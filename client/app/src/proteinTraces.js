@@ -1,5 +1,6 @@
 var proteinTraces = {
-    traces: []
+    traces: [],
+    calibration_parameters: [0, 0]
 };
 
 angular.module('app').value('proteinTraces', proteinTraces);

@@ -38,21 +38,22 @@ var ComplexFeatureFactory = function($http, $q) {
             'id_type': idType
         })
         .then(function(resp) {
-            var features = resp.data.features;
-            return features.map(function(f) {
-                return new ComplexFeature(
-                    f.subunits_detected,
-                    f.n_subunits_detected,
-                    f.completeness,
-                    f.apex,
-                    f.apex_mw,
-                    f.left_pp,
-                    f.right_pp,
-                    f.stoichiometry_estimated,
-                    f.peak_corr,
-                    f.complex_sec_estimated
-                );
-            });
+            resp.data.features = resp.data.features.map(function(f) {
+                    return new ComplexFeature(
+                        f.subunits_detected,
+                        f.n_subunits_detected,
+                        f.completeness,
+                        f.apex,
+                        f.apex_mw,
+                        f.left_pp,
+                        f.right_pp,
+                        f.stoichiometry_estimated,
+                        f.peak_corr,
+                        f.complex_sec_estimated
+                    );
+                });
+            console.log(resp.data);
+            return resp.data;
         })
         .catch(function(resp) {
             return $q.reject(resp.data.error);
