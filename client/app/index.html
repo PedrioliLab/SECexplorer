@@ -38,19 +38,20 @@
           <div class="panel-heading">{{:: proteinQueryCtrl.complexFeatures.error}}</div>
       </div>
     </div>
-    <div ng-if="proteinQueryCtrl.complexFeatures.no_ms_signal.length > 0">
-      <div class="panel panel-danger">
-          <div class="panel-heading">
-              <span ng-bind="proteinQueryCtrl.complexFeatures.no_ms_signal.length"></span>
-              IDs without MS signal
-          </div>
-      </div>
-    </div>
     <div ng-if="proteinQueryCtrl.complexFeatures.failed_conversion.length > 0">
       <div class="panel panel-danger">
           <div class="panel-heading">
               <span ng-bind="proteinQueryCtrl.complexFeatures.failed_conversion.length"></span>
-              unknown IDs
+              ID(s) unknown
+          </div>
+      </div>
+    </div>
+    <div ng-if="proteinQueryCtrl.complexFeatures.no_ms_signal.length > 0">
+      <div class="panel panel-danger">
+          <div class="panel-heading">
+              No MS signal for
+              <span ng-bind="proteinQueryCtrl.complexFeatures.no_ms_signal.length"></span>
+              ID(s)
           </div>
       </div>
     </div>
@@ -133,7 +134,6 @@
           <table class="table table-hover table-condensed"
               ng-show="!proteinQueryCtrl.isFeatureQueryRunning"
               >
-              <thead>
                     <tr
                     ng-mousedown="complexCtrl.showAllTraces()"
                         >
@@ -148,7 +148,6 @@
                     <th>Estimated Stoichiometry</th>
                     <th>Peak Corr.</th>
                     </tr>
-              </thead>
             <tr ng-repeat="feat in proteinQueryCtrl.complexFeatures.features"
               ng-mousedown="complexCtrl.clickTableRow($index)"
               ng-class="{'selected':$index == selectedRow}"

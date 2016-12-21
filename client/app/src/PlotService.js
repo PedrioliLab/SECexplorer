@@ -22,6 +22,7 @@ var PlotService = function() {
      * chromatograms to plot.
      */
     this.plotProteinTraces = function(proteinTraces, highlightIds, leftSEC, rightSEC, apex, sec_estimated) {
+        console.log(highlightIds);
         var plotElement = $('#protein-trace-plot').get(0);
 
         var proteins = proteinTraces.proteins;
