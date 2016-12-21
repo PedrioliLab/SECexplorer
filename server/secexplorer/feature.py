@@ -28,7 +28,8 @@ def cached_run_secexploerer(protein_ids, id_type):
         return backend_cache[key]
     try:
         result = secprofiler.runSECexplorer(protein_ids, id_type)
-    except RRuntimeError:  # as err:
+    except RRuntimeError as err:
+        raise ValueError(err.message)
         backend_cache[key] = None
         return None
     while len(backend_cache) > 1000:
@@ -41,7 +42,7 @@ def cached_run_secexploerer(protein_ids, id_type):
 def get_protein_traces_by_id(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
     if result is None:
-        return pd.DataFrame(), [0, 0], {}, {}
+        return pd.DataFrame(), [], [0, 0], {}, {}
 
     traces = pandas2ri.ri2py_dataframe(result[1][0][0])
     traces = traces.set_index(["id"])
@@ -97,5 +98,11 @@ def compute_complex_features(protein_ids, id_type):
     rows = [list(row) for idx, row in mapping_table.iterrows()]
 
     features = [row.to_dict() for idx, row in features_table.iterrows()]
+
+    def fix(txt):
+        return "; ".join(w.strip() for w in txt.split(";"))
+
+    for row in features:
+        row["subunits_detected"] = fix(row["subunits_detected"])
 
     return features, rows, header, failed_conversion, no_ms_signal

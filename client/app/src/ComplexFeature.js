@@ -52,7 +52,6 @@ var ComplexFeatureFactory = function($http, $q) {
                         f.complex_sec_estimated
                     );
                 });
-            console.log(resp.data);
             return resp.data;
         })
         .catch(function(resp) {

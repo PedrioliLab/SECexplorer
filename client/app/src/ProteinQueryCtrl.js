@@ -23,13 +23,18 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
      */
     this.queryUsingProteinIds = function(ids, idType) {
         this.isTraceQueryRunning = true;
+        this.complexFeatures.features = [];
+        this.complexFeatures.mappings = [];
+        this.complexFeatures.mapping_names = [];
+        this.complexFeatures.failed_conversion = [];
+        this.complexFeatures.no_ms_signal = [];
+        this.complexFeatures.error = "";
         // First get the protein chromatograms.
         ProteinChromatogram.get(ids, idType)
         .then(function(result) {
             proteinTraces.proteins = result.proteins;
             proteinTraces.calibration_parameters = result.calibration_parameters;
             plotService.plotProteinTraces(proteinTraces);
-            /* var ids = _(result.proteins).pluck('id'); */
 
             self.isTraceQueryRunning = false;
             self.isFeatureQueryRunning = true;
@@ -44,9 +49,9 @@ var ProteinQueryCtrl = ['$scope', '$http', 'ComplexFeature', 'ProteinChromatogra
             self.complexFeatures.mapping_names = result.mapping_names;
             self.complexFeatures.failed_conversion = result.failed_conversion;
             self.complexFeatures.no_ms_signal = result.no_ms_signal;
-            console.log(self);
         })
         .catch(function(err) {
+            self.complexFeatures.error = err;
             console.log(err);
             self.isFeatureQueryRunning = false;
             self.isTraceQueryRunning = false;

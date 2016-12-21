@@ -32,6 +32,28 @@
 
 <div class="row">
   <div class="left-pane col-xs-3 col-resizable" ng-controller="ListInputCtrl as listInputCtrl">
+    <br/>
+    <div ng-if="proteinQueryCtrl.complexFeatures.error.length > 0">
+      <div class="panel panel-danger">
+          <div class="panel-heading">{{:: proteinQueryCtrl.complexFeatures.error}}</div>
+      </div>
+    </div>
+    <div ng-if="proteinQueryCtrl.complexFeatures.no_ms_signal.length > 0">
+      <div class="panel panel-danger">
+          <div class="panel-heading">
+              <span ng-bind="proteinQueryCtrl.complexFeatures.no_ms_signal.length"></span>
+              IDs without MS signal
+          </div>
+      </div>
+    </div>
+    <div ng-if="proteinQueryCtrl.complexFeatures.failed_conversion.length > 0">
+      <div class="panel panel-danger">
+          <div class="panel-heading">
+              <span ng-bind="proteinQueryCtrl.complexFeatures.failed_conversion.length"></span>
+              unknown IDs
+          </div>
+      </div>
+    </div>
     <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#proteinids">Protein IDs</a></li>
     <li><a data-toggle="tab" href="#assignments">ID Assignments</a></li>
@@ -111,20 +133,22 @@
           <table class="table table-hover table-condensed"
               ng-show="!proteinQueryCtrl.isFeatureQueryRunning"
               >
-            <tr
-              ng-mousedown="complexCtrl.showAllTraces()"
-                >
-              <th></th>
-              <th>Subunits</th>
-              <th># Subunits</th>
-              <th>Completeness</th>
-              <th>Apex</th>
-              <th>Apex apparent MW</th>
-              <th>Left boundary</th>
-              <th>Right boundary</th>
-              <th>Estimated Stoichiometry</th>
-              <th>Peak Correlation</th>
-            </tr>
+              <thead>
+                    <tr
+                    ng-mousedown="complexCtrl.showAllTraces()"
+                        >
+                    <th></th>
+                    <th>Subunits</th>
+                    <th># Subunits</th>
+                    <th>Complete-ness</th>
+                    <th>Apex</th>
+                    <th>Apex apparent MW</th>
+                    <th>Left boundary</th>
+                    <th>Right boundary</th>
+                    <th>Estimated Stoichiometry</th>
+                    <th>Peak Corr.</th>
+                    </tr>
+              </thead>
             <tr ng-repeat="feat in proteinQueryCtrl.complexFeatures.features"
               ng-mousedown="complexCtrl.clickTableRow($index)"
               ng-class="{'selected':$index == selectedRow}"

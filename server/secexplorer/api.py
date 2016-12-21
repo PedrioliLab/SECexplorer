@@ -27,7 +27,7 @@ def get_complex_features():
             'failed_conversion': failed_conversion,
             'no_ms_signal': no_ms_signal,
         })
-    except ValueError as err:
+    except Exception as err:
         return make_response(jsonify(error=err.message), 500)
 
 

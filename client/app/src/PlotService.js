@@ -23,7 +23,6 @@ var PlotService = function() {
      */
     this.plotProteinTraces = function(proteinTraces, highlightIds, leftSEC, rightSEC, apex, sec_estimated) {
         var plotElement = $('#protein-trace-plot').get(0);
-        console.log('plot');
 
         var proteins = proteinTraces.proteins;
         var calibration_parameters = proteinTraces.calibration_parameters;
@@ -80,7 +79,6 @@ var PlotService = function() {
                     size: 10 
                 },
             };
-            console.log(data[index]);
             return trace;
         }));
 
