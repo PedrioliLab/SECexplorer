@@ -20,12 +20,24 @@ taskList.forEach(function(taskFile) {
     require(taskPath + '/' + taskFile)(gulp, $);
 });
 
-gulp.task('default', 
-    runSequence(
-        'clean',
-        ['make-script-watch', 'make-style'],
-        'copy',
-        'watch',
-        'start-server'
-    )
+gulp.task('start', 
+    function() {
+	    return runSequence(
+		'clean',
+		['make-script-watch', 'make-style'],
+		'copy',
+		'watch',
+		'start-server'
+	    )
+	}
+);
+
+gulp.task('build', 
+    function() {
+	    return runSequence(
+		'clean',
+		['make-script', 'make-style'],
+		'copy'
+	    )
+	}
 );
