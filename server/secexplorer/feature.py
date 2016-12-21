@@ -1,6 +1,7 @@
 # encoding: utf-8
 from collections import OrderedDict
 
+import numpy as np
 import pandas as pd
 
 from rpy2 import robjects
@@ -88,6 +89,8 @@ def compute_complex_features(protein_ids, id_type):
         return [], [], header, protein_ids, []
 
     features_table = pandas2ri.ri2py_dataframe(result[1][1])
+    # remove rows with inf or nan values:
+    features_table = features_table.replace([np.inf, -np.inf], np.nan).dropna(axis=0, how="any")
 
     failed_conversion = [cell[0] for cell in pandas2ri.ri2py_listvector(result[0][0])]
     no_ms_signal = list(pandas2ri.ri2py_listvector(result[0][1]))
