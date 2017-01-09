@@ -80,6 +80,13 @@ var PlotService = function() {
                     size: 10 
                 },
             };
+
+            if (highlightIds !== undefined) {
+                var shouldHighlightTrace = highlightIds.indexOf(p.id) !== -1;
+                if (!shouldHighlightTrace) {
+                    trace.opacity = 0.0;
+                }
+            }
             return trace;
         }));
 
