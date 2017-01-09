@@ -41,3 +41,12 @@ gulp.task('build',
 	    )
 	}
 );
+
+gulp.task('default', 
+    function() {
+	    return runSequence(
+		'build',
+		'start'
+	    )
+	}
+);
