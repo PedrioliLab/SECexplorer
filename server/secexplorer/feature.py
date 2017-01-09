@@ -8,7 +8,7 @@ from rpy2 import robjects
 from rpy2.robjects.packages import importr
 from rpy2.robjects import pandas2ri
 from rpy2.robjects import numpy2ri
-from rpy2.rinterface import RRuntimeError
+from rpy2.rinterface import RRuntimeError, NULL
 
 
 base = importr('base')
@@ -31,8 +31,6 @@ def cached_run_secexploerer(protein_ids, id_type):
         result = secprofiler.runSECexplorer(protein_ids, id_type)
     except RRuntimeError as err:
         raise ValueError(err.message)
-        backend_cache[key] = None
-        return None
     while len(backend_cache) > 1000:
         first_key = backend_cache.keys()[0]
         del backend_cache[first_key]
@@ -42,13 +40,12 @@ def cached_run_secexploerer(protein_ids, id_type):
 
 def get_protein_traces_by_id(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
-    if result is None:
+    if result is None or result[1] == NULL:
         return pd.DataFrame(), [], [0, 0], {}, {}
 
     traces = pandas2ri.ri2py_dataframe(result[1][0][0])
     traces = traces.set_index(["id"])
     traces.index.name = "protein_id"
-
 
     mapping_table = pandas2ri.ri2py_dataframe(result[0][3])
     if len(mapping_table.columns) == 3:
@@ -79,13 +76,21 @@ def get_protein_traces_by_id(protein_ids, id_type):
             intensity = traces.loc[su, sec]
             monomer_intensities[su] = intensity
 
+    new_subunits = []
+    for subunits in features.subunits_detected:
+        subunits = subunits.split(";")
+        subunits = [mapping.get(su, su) for su in subunits]
+        new_subunits.append(";".join(subunits))
+
+    features["subunits_detected"] = new_subunits
+
     calibration_parameters = result[1][2]
     return traces, labels, calibration_parameters, monomer_secs, monomer_intensities
 
 
 def compute_complex_features(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
-    if result is None:
+    if result is None or result[1] == NULL:
         header = [id_type, "name"]
         return [], [], header, protein_ids, []
 
