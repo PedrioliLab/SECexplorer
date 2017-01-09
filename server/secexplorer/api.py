@@ -65,10 +65,10 @@ def get_proteins():
             print(uid, label)
             if uid in monomer_secs:
                 proteins.append({
-                    'id': uid,
+                    'id': label,
                     'id_type': id_type,
                     'intensity': map(float, trace.tolist()),
-                    'label': label,
+                    'label': label if uid == label else "%s (%s)" % (label, uid),
                     'sec': sec_positions,
                     'monomer_sec': int(monomer_secs.get(uid)),
                     'monomer_intensity': int(monomer_intensities.get(uid)),
