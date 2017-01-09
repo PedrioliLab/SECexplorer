@@ -120,6 +120,23 @@ var PlotService = function() {
 
         var shapes = [
 
+            {
+                        type: 'rect',
+                        // x-reference is assigned to the x-values
+                        // xref: 'x',
+                        // y-reference is assigned to the plot paper [0,1]
+                        // yref: 'paper',
+                        x0: leftSEC,
+                        y0: 0,
+                        x1: rightSEC,
+                        y1: max_intensity * 1.03,
+                        fillcolor: '#d3d3d3',
+                        opacity: 0.3,
+                        line: {
+                            width: 0
+                        }
+                    },
+
                 {
                     type: 'line',
                     x0: apex,
@@ -130,23 +147,8 @@ var PlotService = function() {
                     opacity: 0.25,
                     line: {
                         width: 2,
-                        dash: 'dot',
                     },
                     layer: 'above',
-                },
-                {
-                    type: 'line',
-                    x0: leftSEC,
-                    y0: 0,
-                    x1: leftSEC,
-                    y1: max_intensity * 1.03,
-                    fillcolor: '#3030ff',
-                    opacity: 0.25,
-                    line: {
-                        width: 2,
-                        dash: 'dot',
-                    },
-                    layer: 'above'
                 },
                 {
                     type: 'line',
@@ -155,7 +157,7 @@ var PlotService = function() {
                     x1: rightSEC,
                     y1: max_intensity * 1.03,
                     fillcolor: '#3030ff',
-                    opacity: 0.25,
+                    opacity: 0.0,
                     line: {
                         width: 2,
                         dash: 'dot',
