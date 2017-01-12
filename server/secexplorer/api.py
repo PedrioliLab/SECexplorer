@@ -19,16 +19,16 @@ def get_complex_features():
     id_type = data.get('id_type')
     try:
         features, rows, header, failed_conversion, no_ms_signal = compute_complex_features(ids, id_type)
-        result = {
+        print(header)
+        return jsonify({
             'features': features,
             'mappings': rows,
             'mapping_names': header,
             'failed_conversion': failed_conversion,
             'no_ms_signal': no_ms_signal,
-        }
-        # print(json.dumps(result, indent=4))
-        return jsonify(result)
+        })
     except Exception as err:
+        import traceback; traceback.print_exc()
         return make_response(jsonify(error=err.message), 500)
 
 
@@ -73,11 +73,10 @@ def get_proteins():
                     'monomer_sec': int(monomer_secs.get(uid)),
                     'monomer_intensity': int(monomer_intensities.get(uid)),
                 })
-        result = {
+        return jsonify({
             'proteins': proteins,
             'calibration_parameters': list(calibration_parameters)
-        }
-        # print(json.dumps(result, indent=4))
-        return jsonify(result)
+        })
     except Exception as err:
+        import traceback; traceback.print_exc()
         return make_response(jsonify(error=err.message), 500)

@@ -1,7 +1,6 @@
 # encoding: utf-8
 from collections import OrderedDict
 
-import numpy as np
 import pandas as pd
 
 from rpy2 import robjects
@@ -64,25 +63,19 @@ def get_protein_traces_by_id(protein_ids, id_type):
             label = uniprot_id
         labels.append(label)
 
-    features = pandas2ri.ri2py_dataframe(result[1][1])
-
+    df_protein_info = pandas2ri.ri2py_dataframe(result[1][0][2])
+    df_protein_info = df_protein_info.set_index(["id"])
+    df_protein_info.index.name = "protein_id"
     monomer_secs = {}
     monomer_intensities = {}
-    for subunits, monomer_sec in zip(features.subunits_detected, features.monomer_sec):
-        subunits = subunits.split(";")
-        monomer_sec = monomer_sec.split(";")
-        for (su, sec) in zip(subunits, monomer_sec):
-            monomer_secs[su] = sec
-            intensity = traces.loc[su, sec]
-            monomer_intensities[su] = intensity
-
-    new_subunits = []
-    for subunits in features.subunits_detected:
-        subunits = subunits.split(";")
-        subunits = [mapping.get(su, su) for su in subunits]
-        new_subunits.append(";".join(subunits))
-
-    features["subunits_detected"] = new_subunits
+    for protein_id in protein_ids:
+        sec = df_protein_info.loc[protein_id, "protein_mw"]
+        sec = int(round(sec))
+        if sec == 0:
+            sec = 1
+        monomer_secs[protein_id] = sec
+        intensity = traces.loc[protein_id, str(sec)]
+        monomer_intensities[protein_id] = intensity
 
     calibration_parameters = result[1][2]
     return traces, labels, calibration_parameters, monomer_secs, monomer_intensities
@@ -93,10 +86,11 @@ def compute_complex_features(protein_ids, id_type):
     if result is None or result[1] == NULL:
         header = [id_type, "name"]
         return [], [], header, protein_ids, []
+    if result[1][1] == NULL:
+        header = [id_type, "name"]
+        return [], [], header, [], []
 
     features_table = pandas2ri.ri2py_dataframe(result[1][1])
-    # remove rows with inf or nan values:
-    features_table = features_table.replace([np.inf, -np.inf], np.nan).dropna(axis=0, how="any")
 
     failed_conversion = [cell[0] for cell in pandas2ri.ri2py_listvector(result[0][0])]
     no_ms_signal = list(pandas2ri.ri2py_listvector(result[0][1]))
