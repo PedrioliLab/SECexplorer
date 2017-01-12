@@ -188,11 +188,12 @@ var PlotService = function() {
                 y: [0],
                 type: 'scatter',
                 mode: 'symbols',
-                opacity: 0.6,
+                opacity: 0.7,
                 showlegend: false,
                 marker: {
                     color: '#000000',
-                    size: 10
+                    size: 12,
+                    symbol: 'triangle-up',
                 },
                 hoverinfo: 'text',
                 text: 'estimated SEC: ' + sec_estimated + '<br>(' + mw_estimated + ' kDA)',
