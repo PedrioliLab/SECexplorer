@@ -19,7 +19,6 @@ def get_complex_features():
     id_type = data.get('id_type')
     try:
         features, rows, header, failed_conversion, no_ms_signal = compute_complex_features(ids, id_type)
-        print(header)
         return jsonify({
             'features': features,
             'mappings': rows,
@@ -62,7 +61,6 @@ def get_proteins():
         protein_traces, labels, calibration_parameters, monomer_secs, monomer_intensities = get_protein_traces_by_id(ids, id_type)
         sec_positions = map(int, protein_traces.columns)
         for (uid, trace), label in zip(protein_traces.iterrows(), labels):
-            print(uid, label)
             if uid in monomer_secs:
                 proteins.append({
                     'id': label,

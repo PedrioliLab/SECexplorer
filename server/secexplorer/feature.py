@@ -63,17 +63,13 @@ def get_protein_traces_by_id(protein_ids, id_type):
             label = uniprot_id
         labels.append(label)
 
-    failed_conversion = [cell[0] for cell in pandas2ri.ri2py_listvector(result[0][0])]
-    no_ms_signal = list(pandas2ri.ri2py_listvector(result[0][1]))
-    missing = set(failed_conversion + no_ms_signal)
-
     df_protein_info = pandas2ri.ri2py_dataframe(result[1][0][2])
     df_protein_info = df_protein_info.set_index(["id"])
     df_protein_info.index.name = "protein_id"
     monomer_secs = {}
     monomer_intensities = {}
     for protein_id in protein_ids:
-        if protein_id in missing:
+        if protein_id not in df_protein_info.index:
             continue
         sec = df_protein_info.loc[protein_id, "protein_mw"]
         sec = int(round(sec))
