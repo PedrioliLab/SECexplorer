@@ -1,6 +1,8 @@
 # encoding: utf-8
 from collections import OrderedDict
 
+import math
+
 import pandas as pd
 
 from rpy2 import robjects
@@ -50,8 +52,11 @@ def get_protein_traces_by_id(protein_ids, id_type):
     if len(mapping_table.columns) == 3:
         mapping = dict(zip(mapping_table.iloc[:, 0],
                            mapping_table.iloc[:, 2]))
+        mapping_back = dict(zip(mapping_table.iloc[:, 2],
+                                mapping_table.iloc[:, 0]))
     else:
         mapping = {}
+        mapping_back = {}
 
     labels = []
     for uniprot_id in traces.index:
@@ -62,24 +67,44 @@ def get_protein_traces_by_id(protein_ids, id_type):
         else:
             label = uniprot_id
         labels.append(label)
+    calibration_parameters = result[1][2]
 
     df_protein_info = pandas2ri.ri2py_dataframe(result[1][0][2])
     df_protein_info = df_protein_info.set_index(["id"])
     df_protein_info.index.name = "protein_id"
+    lookup = lambda id: mapping.get(id, id)
+    df_protein_info.index = map(lookup, df_protein_info.index)
     monomer_secs = {}
     monomer_intensities = {}
     for protein_id in protein_ids:
         if protein_id not in df_protein_info.index:
             continue
-        sec = df_protein_info.loc[protein_id, "protein_mw"]
+        mw = df_protein_info.loc[protein_id, "protein_mw"]
+        sec = (math.log(mw) - calibration_parameters[0]) / calibration_parameters[1]
         sec = int(round(sec))
-        if sec == 0:
+        if sec <= 0:
             sec = 1
-        monomer_secs[protein_id] = sec
-        intensity = traces.loc[protein_id, str(sec)]
-        monomer_intensities[protein_id] = intensity
+        uniprot_id = mapping_back.get(protein_id, protein_id)
 
-    calibration_parameters = result[1][2]
+        # look for local peak:
+        if 1 < sec < 85:
+            i1 = traces.loc[uniprot_id, str(sec - 1)]
+            i2 = traces.loc[uniprot_id, str(sec)]
+            i3 = traces.loc[uniprot_id, str(sec + 1)]
+            if i1 >= i2 and i1 >= i3:
+                intensity = i1
+                sec = sec - 1
+            elif i2 >= i1 and i2 >= i3:
+                intensity = i2
+            else:
+                intensity = i3
+                sec = sec + 1
+        else:
+            intensity = traces.loc[uniprot_id, str(sec)]
+
+        monomer_secs[uniprot_id] = sec
+        monomer_intensities[uniprot_id] = intensity
+
     return traces, labels, calibration_parameters, monomer_secs, monomer_intensities
 
 
