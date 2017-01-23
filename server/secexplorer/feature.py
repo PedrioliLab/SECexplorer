@@ -41,7 +41,7 @@ def cached_run_secexploerer(protein_ids, id_type):
 
 def get_protein_traces_by_id(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
-    if result is None or result[1] == NULL:
+    if result is None or result[1] == NULL or result[1][1] == NULL:
         return pd.DataFrame(), [], [0, 0], {}, {}
 
     traces = pandas2ri.ri2py_dataframe(result[1][0][0])
@@ -52,11 +52,8 @@ def get_protein_traces_by_id(protein_ids, id_type):
     if len(mapping_table.columns) == 3:
         mapping = dict(zip(mapping_table.iloc[:, 0],
                            mapping_table.iloc[:, 2]))
-        mapping_back = dict(zip(mapping_table.iloc[:, 2],
-                                mapping_table.iloc[:, 0]))
     else:
         mapping = {}
-        mapping_back = {}
 
     labels = []
     for uniprot_id in traces.index:
@@ -67,46 +64,30 @@ def get_protein_traces_by_id(protein_ids, id_type):
         else:
             label = uniprot_id
         labels.append(label)
-    calibration_parameters = result[1][2]
 
-    df_protein_info = pandas2ri.ri2py_dataframe(result[1][0][2])
-    df_protein_info = df_protein_info.set_index(["id"])
-    df_protein_info.index.name = "protein_id"
-    lookup = lambda id: mapping.get(id, id)
-    df_protein_info.index = map(lookup, df_protein_info.index)
+    features = pandas2ri.ri2py_dataframe(result[1][1])
+
     monomer_secs = {}
     monomer_intensities = {}
-    for protein_id in protein_ids:
-        if protein_id not in df_protein_info.index:
-            continue
-        mw = df_protein_info.loc[protein_id, "protein_mw"]
-        sec = (math.log(mw) - calibration_parameters[0]) / calibration_parameters[1]
-        sec = int(round(sec))
-        if sec <= 0:
-            sec = 1
-        uniprot_id = mapping_back.get(protein_id, protein_id)
+    for subunits, monomer_sec in zip(features.subunits_detected, features.monomer_sec):
+        subunits = subunits.split(";")
+        monomer_sec = monomer_sec.split(";")
+        for (su, sec) in zip(subunits, monomer_sec):
+            monomer_secs[su] = sec
+            intensity = traces.loc[su, sec]
+            monomer_intensities[su] = intensity
 
-        # look for local peak:
-        if 1 < sec < 85:
-            i1 = traces.loc[uniprot_id, str(sec - 1)]
-            i2 = traces.loc[uniprot_id, str(sec)]
-            i3 = traces.loc[uniprot_id, str(sec + 1)]
-            if i1 >= i2 and i1 >= i3:
-                intensity = i1
-                sec = sec - 1
-            elif i2 >= i1 and i2 >= i3:
-                intensity = i2
-            else:
-                intensity = i3
-                sec = sec + 1
-        else:
-            intensity = traces.loc[uniprot_id, str(sec)]
+    new_subunits = []
+    for subunits in features.subunits_detected:
+        subunits = subunits.split(";")
+        subunits = [mapping.get(su, su) for su in subunits]
+        new_subunits.append(";".join(subunits))
 
-        monomer_secs[uniprot_id] = sec
-        monomer_intensities[uniprot_id] = intensity
+    features["subunits_detected"] = new_subunits
+
+    calibration_parameters = result[1][2]
 
     return traces, labels, calibration_parameters, monomer_secs, monomer_intensities
-
 
 def compute_complex_features(protein_ids, id_type):
     result = cached_run_secexploerer(protein_ids, id_type)
