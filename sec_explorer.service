@@ -5,7 +5,7 @@ After=apache2.service
 
 [Service]
 TimeoutStartSec=0
-ExecStart=/home/user/SECexplorer/client/start_server
+ExecStart=/home/user/SECexplorer/client/start_nodejs_for_frontend
 ExecStop=/home/user/SECexplorer/client/stop_server
 
 [Install]

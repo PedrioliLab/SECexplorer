@@ -4,9 +4,9 @@ var runSequence = require('run-sequence');
 
 // Define variables
 var config = {
-    sourceDir: './app/src',
-    sourceFile: './app/src/app.module.js',
-    destFolder: './app/build' 
+    sourceDir: './app78923x/src',
+    sourceFile: './app78923x/src/app.module.js',
+    destFolder: './app78923x/build' 
 };
 
 // Read tasks

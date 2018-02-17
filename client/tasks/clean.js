@@ -4,7 +4,7 @@ module.exports = function (gulp, $) {
 
     // Clean old build files
     gulp.task('clean', function() {
-        return del(['app/build']);
+        return del(['app78923x/build']);
     });
 
 };

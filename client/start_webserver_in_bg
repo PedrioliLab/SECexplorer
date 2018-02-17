@@ -1,0 +1,8 @@
+#!/bin/sh
+cd /home/user/sec-explorer/client
+at now <<EOL
+./start_nodejs_for_frontend 2>&1 >log
+EOL
+sleep 1
+atq
+

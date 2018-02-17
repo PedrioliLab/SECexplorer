@@ -8,8 +8,8 @@ module.exports = function (gulp, $) {
         // gulp.watch($.cfg.sourceDir + '/**/*.js', [
         //     'lint',
         // ]);
-        gulp.watch('app/styles/**/*.less', ['make-style']);
-        gulp.watch('app/**/*.+(html|png|ico|jpg)', ['copy']);
+        gulp.watch('app78923x/styles/**/*.less', ['make-style']);
+        gulp.watch('app78923x/**/*.+(html|png|ico|jpg)', ['copy']);
         watch($.cfg.destFolder + '/**/*').pipe(connect.reload());
     });
 

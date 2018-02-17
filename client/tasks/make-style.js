@@ -4,7 +4,7 @@ module.exports = function (gulp, $) {
 
     // Compile LESS files
     gulp.task('make-style', function() {
-        return gulp.src('app/styles/style.less')
+        return gulp.src('app78923x/styles/style.less')
             .pipe(less())
             .pipe(gulp.dest($.cfg.destFolder));
     });

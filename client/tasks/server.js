@@ -7,8 +7,8 @@ module.exports = function (gulp, $) {
     // API requests to backend server
     gulp.task('start-server', function() {
         return connect.server({
-            port: 8010,
-            root: 'app/build',
+            port: 80,
+            root: 'app78923x/build',
             livereload: true,
             middleware: function(connect, opt) {
                 return [
