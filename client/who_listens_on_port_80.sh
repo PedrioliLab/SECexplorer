@@ -5,3 +5,4 @@ if [ $UID != 0 ]; then
     exit 1
 fi
 fuser -u 80/tcp
+fuser -u 443/tcp

@@ -1,6 +1,17 @@
 # encoding: utf-8
 from collections import OrderedDict
 
+import os
+os.environ["R_LIBS"] = "/home/user/R/x86_64-pc-linux-gnu-library/3.2"
+
+import sys
+sys.stdout = sys.stderr
+
+print "cwd is", os.getcwd()
+print "uid is", os.getuid()
+print "loaded", __file__
+print sys.executable
+
 import math
 
 import pandas as pd
@@ -11,6 +22,7 @@ from rpy2.robjects import pandas2ri
 from rpy2.robjects import numpy2ri
 from rpy2.rinterface import RRuntimeError, NULL
 
+print(robjects.R()(".libPaths()"))
 
 base = importr('base')
 
@@ -19,18 +31,22 @@ numpy2ri.activate()
 
 robjects.numpy2ri.activate()
 
-secprofiler = importr('SECprofiler')
+ccprofiler = importr('CCprofiler')
+print("imported from r:", ccprofiler)
 
 backend_cache = OrderedDict()
 
 
 def cached_run_secexploerer(protein_ids, id_type):
+    print("got arguments", repr(protein_ids), repr(id_type))
     key = (tuple(sorted(protein_ids)), id_type)
+    print("backend cache is", backend_cache)
     if key in backend_cache:
         return backend_cache[key]
     try:
-        result = secprofiler.runSECexplorer(protein_ids, id_type)
+        result = ccprofiler.runSECexplorer(protein_ids, id_type)
     except RRuntimeError as err:
+        print(err)
         raise ValueError(err.message)
     while len(backend_cache) > 1000:
         first_key = backend_cache.keys()[0]
@@ -124,3 +140,10 @@ def compute_complex_features(protein_ids, id_type):
         row["subunits_detected"] = fix(row["subunits_detected"])
 
     return features, rows, header, failed_conversion, no_ms_signal
+
+
+if __name__ == "__main__":
+    print(get_protein_traces_by_id(["P25786", "P25787"], "UNIPROTKB"))
+    # print(compute_complex_features(["P25786", "P25787"], "UNIPROTKB"))
+    # print(compute_complex_features([u'P25786', u'P25787', u'P25788', u'P25789', u'P28066', u'P60900', u'O14818', u'P20618', u'P49721', u'P49720', u'P28070', u'P28074', u'P28072', u'Q99436', u'P62191', u'P35998', u'P17980', u'P43686', u'P62195', u'P62333', u'Q9UNM6', u'P55036'], u'UNIPROTKB'))
+
